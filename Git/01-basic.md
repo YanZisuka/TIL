@@ -60,3 +60,19 @@ $ git log
 $ git status
 ```
 
+
+
+## 원격저장소 연결
+
+```
+$ git remote add origin https://github.com/ID
+```
+
+
+
+## 로컬 커밋 원격으로 보내기
+
+```
+$ git push origin master
+```
+
