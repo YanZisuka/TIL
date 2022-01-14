@@ -1,3 +1,3 @@
-# Today I Learned
+# :floppy_disk:Today I Learned
 
-2022-01-13
+-   2022-01-13 시작
