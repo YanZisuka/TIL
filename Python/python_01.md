@@ -3,7 +3,7 @@
 
 -   `Release 버전`: 사용자에게 배포할 때의 버전
 -   `개발 버전`: 개발자가 정의한 버전
--   대다수의 SW version은 `Semantic Version`으로 이루어져 있음
+-   대다수의 Software version은 `Semantic Version`으로 이루어져 있음
 -   `SemVer`: `MAJOR.Minor.patch`
 -   `patch`는 **사소한 버그 패치 등**
 -   `Minor`는 **patch보다 더 많은 변화**
@@ -40,7 +40,7 @@
 -   참/거짓: `True/False`
 
 #### 어떻게 저장할까?
--   변수(variable)
+-   변수(`variable`)
 
     ```
     # dust 변수에 70을 할당
@@ -50,14 +50,14 @@
     dust == 70
     ```
 
--   리스트(list)
+-   리스트(`list`)
 
     ```
     # 3일치의 미세먼지 양
     dust = [58, 40, 60,]
     ```
 
--   딕셔너리(dictionary)
+-   딕셔너리(`dictionary`)
 
     ```
     dust = ['서대문구' : 58, '마포구' : 40, '도봉구' : 60,]
@@ -113,6 +113,30 @@ for i in dust:
 ### 함수
 
 -   특정한 용도의 동작하는 코드를 한 곳에 모아 놓은 것
+
 -   함수는 `일의 단위`이다
-- 내장함수(bulit-in function)
-- 외장함수(external function)
+
+- 내장함수(`bulit-in function`)
+
+- 외장함수(`external function`)
+
+- 라이브러리(`library`)
+
+    ```
+    $ pip install packagename
+    ```
+
+
+
+## Client & Server
+
+### Client
+
+-   URL 요청을 **보내고**, 문서를 한장 **받는** 프로그램
+-   Chrome, Safari etc.,
+
+### Server
+
+-   URL 요청을 **받고**, 문서를 한장 **주는** 프로그램
+-   Naver, Kakao etc.,
+
