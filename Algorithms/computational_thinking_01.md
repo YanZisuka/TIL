@@ -22,7 +22,7 @@
 # 토플과 복권
 "합격하려면 TOEFL 500 이상 혹은 TOEIC 600 이상 필요" vs. "복권에 당첨되면 자동차 혹은 천만원 드립니다"
 
-- 두 명제는 같은 표현을 사용하지만 하나는 inclusive or, 다른 하나는 exclusive or
+- 두 문장은 같은 표현을 사용하지만 하나는 inclusive or, 다른 하나는 exclusive or
 ```
 
 -   일상 생활에서는 `Soft Logic`이 빠르기 때문에 유용
