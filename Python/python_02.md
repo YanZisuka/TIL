@@ -31,7 +31,7 @@
 >   `식별자(Identifiers)`
 
 -   `CamelType`
--   `snake-type`
+-   `snake_type`
 -   규칙
     -   식별자의 이름은 영문 알파벳, 언더스코어(`_`), 숫자로 구성
     -   첫 글자에 숫자가 올 수 없음
@@ -112,6 +112,7 @@
 
 -   순서 없이 키-값(`key-value`) 쌍으로 이루어진 객체를 참조하는 자료형
 -   `key`에 `list` 할당 불가능
+-   `list`내에 `dictionary`를 저장할 때, `key`값은 고정시키는 것이 일반적
 -   **가변자료형(mutable)**
 
 ### 자료형 변환(Typecasting)
@@ -271,7 +272,7 @@ grades = {'kim' : 80, 'lee' : 90}
 for key in grades:
 	print(key)
 
-for key in grades.key():
+for key in grades.keys():
 	print(key)
 	
 for value in grades.values():
