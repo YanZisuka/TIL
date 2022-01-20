@@ -57,7 +57,8 @@ def function_name(parameter):
 
 ![image-20220119142704901](python_03.assets/image-20220119142704901.png)
 
--   함수 내에서는 바깥 scope의 변수에 접근 가능하나 수정은 불가능
+-   함수 내에서는 바깥 `scope`의 변수에 접근 가능하나 **재할당은 불가능**
+-   `num_list.sort()`처럼 `메서드`를 이용하면 **수정은 가능**하다
 -    `global`
     -   현재 코드 블록 전체에 적용, 나열된 식별자가 `global variable`임을 나타냄
     -   `global`에 나열된 이름은 같은 코드 블록에서 `global `앞에 등장할 수 없음
@@ -131,6 +132,7 @@ def sum(n):
     -   변수의 사용이 줄어들며, 코드의 가독성이 높아짐
 -   **1개 이상의 `base case`가 존재하고, 수렴**하도록 작성
 -   `python`에서는 최대 재귀 깊이(`maximum recursion depth`)가 1,000번으로 설정, 호출 횟수가 이를 넘어가면 `Recursion Error`발생
+-   시간복잡도가 `O(n^2)`이다
 
 
 
