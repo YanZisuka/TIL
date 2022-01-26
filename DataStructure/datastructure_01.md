@@ -1,4 +1,4 @@
-# 자료구조(`DataStructure`)
+# 자료구조(DataStructure)_01
 
 ## 데이터의 분류
 

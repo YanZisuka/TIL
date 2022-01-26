@@ -1,6 +1,6 @@
 # Python_03
 
-## 함수(`Function`)
+## 함수(Function)
 
 -   `Decomposition`: 기능을 분해하고, 재사용 가능하게 만듦
 -   `Abstraction`: 복잡한 내용을 모르더라도 사용할 수 있는 블랙박스(재사용성과 가독성, 생산성)
