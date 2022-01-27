@@ -153,6 +153,21 @@ class Person:
 -   클래스 선언 내부에서 정의
 -   `<classname>.<name>`으로 접근 및 할당
 
+```python
+a = 1
+
+class MyClass:
+
+    a = 100
+
+    def method(self):
+        print(a, self.a)
+
+mc = MyClass()
+
+mc.method()  # 출력 결과 생각해볼 것. (LEGB Rule vs Class Rule)
+```
+
 >   클래스 메서드
 
 -   클래스가 사용할 메서드
@@ -172,7 +187,7 @@ class Person:
 -   속성을 다루지 않고 단지 기능(행동)만을 하는 메서드를 정의할 떄, 사용
 -   클래스가 사용할 메서드
 -   `@staticmethod` 데코레이터를 사용하여 정의
--   호출 시, **어떠한 인자도 전달되지 않음**
+-   호출 시, **어떠한 인자도 자동으로 전달되지 않음**
 
 
 
@@ -181,6 +196,7 @@ class Person:
 ### 추상화
 
 -   현실 세계를 프로그램에 반영
+-   참새 `개체`들을 참새 `클래스`로 분류, 독수리 `개체`들을 독수리 `클래스`로 분류하고 참새와 독수리를 새 `클래스`로 분류하는 작업이 `추상화(Abstraction)`이다.
 
 ```python
 class Student:
@@ -260,7 +276,7 @@ class Student(Person):
 
 -   두개 이상의 클래스를 상속받는 경우
 -   상속받은 모든 클래스의 요소를 활용 가능
--   중복된 속성이나 메서드가 있는 경우 상속 순서에 의해 결정됨
+-   중복된 속성이나 메서드가 있는 경우 상속 순서에 의해 결정됨(먼저 상속된 클래스가 우선순위가 높다)
 
 ### 다형성
 
@@ -307,6 +323,7 @@ class Student(Person):
         -   `@property` 데코레이터 사용
     -   `setter` 메서드: 변수의 값을 **설정**하는 성격의 메서드
         -   `@<variable>.setter` 사용
+-   구버전 `호환성`도 해결가능
 
 ```python
 class Person:
