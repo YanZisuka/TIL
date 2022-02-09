@@ -15,7 +15,7 @@
         -   시간 복잡도 함수 중 가장 큰 영향을 미치는 n에 대한 항만을 표시
         -   계수는 생략
 
-![Big O(시간 복잡도)란?](https://blog.kakaocdn.net/dn/dqt3XN/btqxKAwgT7d/KrLD2p4Ea1VeKzj8jkuLN0/img.jpg)
+![Time Complexity](algorithms_01.assets/Screen-Shot-2019-02-07-at-2.31.54-PM-1.png)
 
 
 
@@ -55,7 +55,7 @@ num_list = [0, 1, 2, 3, 4, 5]
 
 -   대표적인 정렬 방식의 종류
 
-    ![img](https://d2.naver.com/content/images/2020/01/img.png)
+    ![Sort Table](algorithms_01.assets/img.png)
 
     -   버블 정렬 (Bubble Sort)
     -   카운팅 정렬 (Counting Sort)
@@ -99,17 +99,17 @@ for i:N-1 > 1
 
     -   1단계: Data에서 각 항목들의 발생 회수를 세고, 정수 항목들로 직접 인덱스 되는 카운트 배열 countArray에 저장한다.
 
-    ![img](https://ichi.pro/assets/images/max/724/1*KU8AtbmRrYCp6Yhvq3T1DQ.png)
+    ![Counting Sort](algorithms_01.assets/1_KU8AtbmRrYCp6Yhvq3T1DQ.png)
 
-    ![img](https://ichi.pro/assets/images/max/724/1*NJx2YVjxBNuhnshg8KtZMQ.png)
+    ![Counting Sort](algorithms_01.assets/1_NJx2YVjxBNuhnshg8KtZMQ.png)
 
     -   정렬된 집합에서 각 항목의 앞에 위치할 항목의 개수를 반영하기 위해 countArray의 원소를 조정한다(누적합).
 
-    ![img](https://ichi.pro/assets/images/max/724/1*Ol87vz2H-GMCb4wRr_pZAw.png)
+    ![Counting Sort](algorithms_01.assets/1_Ol87vz2H-GMCb4wRr_pZAw.png)
 
     -   출력 배열의 `outputArray[countArray[inputArray[value]]-1]`위치에 요소를 배치하고 count 값을 1씩 줄인다.
 
-    ![img](https://ichi.pro/assets/images/max/724/1*V2QfYN8ML_SmOXx4PVZP-w.png)
+    ![Counting Sort](algorithms_01.assets/1_V2QfYN8ML_SmOXx4PVZP-w.png)
 
 -   시간 복잡도
 
