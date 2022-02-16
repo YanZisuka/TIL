@@ -90,7 +90,6 @@ for i in range(3):
             if i & (1<<j):				 # i의 j번 비트가 1인 경우
                 print(arr[j], end=', ')	 # j번 원소 출력
         print()
-    print()
     ```
 
 ## 검색(Search)
