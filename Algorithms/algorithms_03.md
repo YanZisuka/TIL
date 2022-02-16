@@ -136,7 +136,7 @@ def BruteForce(p, t):
 
 ### 라빈-카프 알고리즘
 
-![image-Rabin-Karp](algorithms_03.assets/문자열2 - 라빈-카프 시뮬.png)
+![image-Rabin-Karp](algorithms_03.assets/Rabin-Karp.png)
 
 -   해시(Hash)를 활용하는 알고리즘
 -   아스키 코드 기반의 해시 함수를 이용해 해시 값을 구함
@@ -189,7 +189,7 @@ def kmp(t, p):
 
 ### 보이어-무어 알고리즘
 
-![image-Boyer-Moore](algorithms_03.assets/문자열2 - 보이어-무어 시뮬.png)
+![image-Boyer-Moore](algorithms_03.assets/Boyer-Moore.png)
 
 -   오른쪽에서 왼쪽으로 비교
 -   대부분의 상용 S/W에서 채택하고 있는 알고리즘
