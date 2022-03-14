@@ -18,7 +18,7 @@
 
 -   The 1st programmable digital (electronic) computer built by Thomas Flowers in London
 
-#### Truing Test (1950)
+#### Turing Test (1950)
 
 -   A computer could be said to "think" if a human interrogator could not tell it apart, through conversation, from a human being
 
@@ -122,11 +122,12 @@
         -   Each process has an exclusive use of private memory
     
 -   How are these Illusions maintained?
-    -   Multiprogramming(multitasking)
+    -   Multiprogramming (multitasking)
         -   Processes take turns in using the processor
     -   Virtual memory
+        -   예시는 Linux on 32-bit OS이며, kernel이 1/4, user가 3/4 정도를 차지한다.
     
-    ![image-20220313144745221](operating_system_02.assets/image-20220313144745221.png)
+    ![image-20220315000546998](operating_system_02.assets/image-20220315000546998.png)
 
 
 
@@ -141,7 +142,43 @@
     -   So when we call the function again, storage for variables is created and values are reinitialized.
     -   Static local variables - If we want the value to be extent throughout the life of a program, we can define the local variable as "static."
         -   Initialization is performed only at the first call and data is retained between func calls.
--   Global variables
+-   **Global variables**
     -   Variables defined outside a function
     -   The scope of these variables is throughout the entire program
     -   The life of these variables ends when ends **the program completes**
+-   **Static variables**
+    -   Static variables are local in scope to their module in which they are defined, but life is throughout the program
+    -   *Static local variables*: static variables inside a function **cannot be called from outside the function** (because it's not in scope) **but is alive and exists in memory**
+    -   *Static variables*: if a static variable is defined in a global space (say at beginning of file) then **this variable will be accessible only in this file** (file scope)
+
+
+
+### Concurrent processes
+
+-   Two processes *run concurrently (are concurrent)* if their flows overlap in time
+
+-   Otherwise, they are sequential
+
+    ![image-20220315000719699](operating_system_02.assets/image-20220315000719699.png)
+
+
+
+### Context Switching
+
+-   Processes are managed by OS code called the *kernel* (항상 실행되는 OS의 core)
+    -   Important: *the kernel is not a separate process*, but rather runs as part of some user process
+-   User mode and kernel mode
+    -   If the mode bit is set, the process is running in *kernel mode*, and can execute any instruction and can access any memory location
+    -   If the mode bit is not set, the process is running in *user mode* and is not allowed to execute *privileged instructions*
+-   Context
+    -   The kernel maintains a *context* for each process
+    -   Registers에 저장된 내용은 따로 저장하지 않으면 휘발되므로, 진행 상황을 저장해야 하는데, Registers의 상태를 Context라고 한다.
+-   Context switching
+    -   The OS kernel implements multitasking using an exceptional control flow
+    -   At certain points during the execution of a process, **the kernel decide to preempt the current process and restart a previously preempted process**
+        -   This is called **scheduling and handled by code in the kernel called scheduler (or dispatcher)**
+    -   Context switching의 과정
+        1.   **The kernel first saves the context of the current process**
+        2.   **The kernel restores the context of some previously preempted process**
+        3.   **Then, the kernel passes control to this newly restored process**
+
