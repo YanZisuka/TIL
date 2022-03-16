@@ -1,4 +1,4 @@
-# Data Structure_02
+# 자료구조(DataStructure)_02
 
 ## 스택(Stack)
 
