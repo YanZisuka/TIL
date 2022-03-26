@@ -41,15 +41,18 @@
     -   Network Core = 전화망
 
 -   **DSL (Digital Subscriber Line)**
+    
     -   전화선을 통신선로로 사용
     -   Last Mile (마지막 1단계)만 전화선을 사용
     -   Network Core는 별도로 존재
     -   **1 ~ 8Mbps**
+    -   Dedicated channel
     
 -   **Cable Modem**
     -   케이블 TV 선로(동축선)를 이용
     -   **30Mbps**
     -   하지만, 실제로는 선로를 여러 명이 공유해 이론적인 속도보다는 느리다.
+    -   Shared channel
     
 -   **FTTH (Fiber To The Home)**
     -   집 앞까지 광케이블을 연결
