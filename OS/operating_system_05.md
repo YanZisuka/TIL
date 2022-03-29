@@ -1,161 +1,93 @@
 # Operating System_05
 
-## Chapter 5. Concurrency: Mutual Exclusion and Synchronization
+## Chapter 5. CPU Scheduling
 
-### Process Interaction
+### CPU and I/O Bursts in Program Execution
 
-#### In a single-processor system,
+![image-20220330010856249](operating_system_05.assets/image-20220330010856249.png)
 
--   Process executions are interleaved to increase CPU utilization
--   The relative speed of execution of processes cannot be predicted
-    -   It depends on the activities of other processes, the way OS handles interrupts, and the scheduling policies
--   The following difficulties arise
-    -   Mutual exclusion
-    -   Deadlock (모든 프로세스들이 다른 프로세스의 자원을 할당받기 위해 대기하는 상태)
-    -   Starvation (자원을 요청한 프로세스가 소외되어 계속 대기하는 상태)
-    -   Race condition
+### CPU-burst Time의 분포
 
-#### The same problems exist in a multiprocessor system
+![image-20220330010917914](operating_system_05.assets/image-20220330010917914.png)
 
+-   여러 종류의 job(=process)이 섞여 있기 때문에 CPU 스케줄링이 필요하다.
+-   Interactive job에게 적절한 response 제공 요망
+-   CPU와 I/O 장치 등 시스템 자원을 골고루 효율적으로 사용
 
+### 프로세스의 특성
 
-### Competing Processes
+-   프로세스는 그 특성에 따라 다음 두 가지로 나뉨
+    -   **I/O-bound process**
+        -   CPU를 잡고 계산하는 시간보다 I/O에 많은 시간이 필요한 job
+        -   Many short CPU bursts
+    -   **CPU-bound process**
+        -   계산 위주의 job
+        -   few very long CPU bursts
 
-#### Sharing of global resources can create
+### CPU Scheduler & Dispatcher
 
--   Need for *mutual exclusion*
--   *Deadlock*
--   *Starvation*
+-   CPU Scheduler
 
-#### Mutual exclusion
+    -   Ready 상태의 프로세스 중에서 이번에 CPU를 줄 프로세스를 고른다.
 
--   Suppose two processes require access to a single printer
--   Printer is a nonsharable resource
-    -   Without care, line from competing processes will be interleaved
--   During the course of execution, only one process should be allowed to access the resource at a time.
-    -   The portion of program that accesses the resource is called a ***critical section*** of the program.
-    -   Only one process at a time allowed in its critical section
+-   Dispatcher
 
-#### Deadlock
+    -   CPU의 제어권을 CPU scheduler에 의해 선택된 프로세스에게 넘긴다.
+    -   이 과정을 context switching(문맥 교환)이라고 한다.
 
--   Consider two processes P1 and P2, and two resources R1 and R2
--   Each process needs to access both resources to complete its function
--   Suppose the following scenario:
-    -   OS assigns R1 to P2 and R2 to P1
-    -   Each process is waiting for the other resource
-    -   Neither will release the resource until it acquires the other resource
-    -   Two processes are deadlocked!
+-   CPU 스케줄링이 필요한 경우는 프로세스에게 다음과 같은 상태 변화가 있는 경우이다.
 
-#### Starvation (Indefinite postponement)
+    1.   Running -> Blocked (ex. I/O 요청하는 시스템 콜)
+    2.   Running -> Ready (ex. 할당시간만료로 timer interrupt)
+    3.   Blocked -> Ready (ex. I/O 완료 후 인터럽트)
+    4.   Terminate
 
--   Consider 3 processes P1, P2, and P3.
--   Each process requires access to resource R
--   Suppose the following scenario:
-    -   P1 has R and both P2 and P3 wait for R
-    -   OS grants access to P3, then P1, then P3, ...
-    -   P2 may be indefinitely postponed to access the resource
+    -   i, iv의 스케줄링은 **nonpreemptive (=자진반납)**
+    -   All other scheduling is **preemptive**
 
+### Scheduling Criteria
 
+#### CPU utilization (이용률)
 
-### Cooperating Processes
+-   Keep the *CPU as busy as possible*
 
-#### Sharing of global data may lead to *race condition*
+#### Throughput (처리량)
 
-#### Race condition
+-   *number of processes* that *complete* their execution per time unit
 
--   Consider the following two processes
+#### Turnaround time (소요시간, 반환시간)
 
-    ```
-    P1:		a = a + 1;
-    		b = b + 1;
-    P2:		b = 2 * b;
-    		a = 2 * a;
-    ```
+-   amount of time to *execute a particular process*
 
--   If we start with a = b, each process taken separately will leave a = b
+#### Waiting time (대기 시간)
 
--   Now consider the following concurrent execution:
+-   amount of time a process has been *waiting in the ready queue*
 
-    -   Two processes respect mutual exclusion on each individual data item
+#### Response time (응답 시간)
 
-    ```
-    a = a + 1;
-    b = 2 * b;
-    b = b + 1;
-    a = 2 * a;
-    ```
-
--   If we start with a = b = 1, at the end we have a = 4, b = 3.
-
--   **The problem can be avoided by declaring the entire sequence in each process to be a critical section**
-
-![image-20220327125825519](operating_system_05.assets/image-20220327125825519.png)
+-   amount of time it takes *from when a request was submitted until the first response is produced*, **not** output (for time-sharing environment)
 
 
 
-### Atomic Operation
+### Scheduling Algorithms
 
-#### "Atomic" means
+#### FCFS (First-Come First-Served)
 
--   Indivisible, uninterruptable
--   Must be performed atomically, which means either "success" or "failure"
-    -   Success: successfully change the system state
-    -   Failure: no effect on the system state
-
-#### Atomic operation
-
--   A function or action implemented as a single instruction or as a sequence of instructions that appears to be indivisible
--   Can be implemented by HW or by SW
--   HW-level atomic operations
-    -   Test-and-set, fetch-and-add, compare-and-swap, load-link/store-conditional
--   SW-level solutions
-    -   Running a group of instructions in a *critical section*
+![image-20220330010958427](operating_system_05.assets/image-20220330010958427.png)
 
 
 
-### HW Support for Mutual Exclusion
+#### SJF (Shortest-Job-First)
 
-![image-20220327131810821](operating_system_05.assets/image-20220327131810821.png)
+-   각 프로세스의 다음번 CPU burst time을 가지고 스케줄링에 활용
+-   CPU burst time이 가장 짧은 프로세스를 제일 먼저 스케줄링
+-   Two schemes:
+    -   Nonpreemptive
+        -   일단 CPU를 점유하면 이번 CPU burst가 완료될 때까지 CPU를 선점당하지 않음
+    -   Preemptive
+        -   현재 수행중인 프로세스의 남은 burst time보다 더 짧은 CPU burst time을 가지는 새로운 프로세스가 도착하면 CPU를 빼앗김
+        -   이 방법을 Shortest-Remaining-Time-First (SRTF)라고도 부른다.
+-   SJF is optimal
+    -   주어진 프로세스들에 대해 minimum average waiting time을 보장
 
-![image-20220327131853946](operating_system_05.assets/image-20220327131853946.png)
-
-#### Compare and Swap Instruction
-
-![image-20220327132220099](operating_system_05.assets/image-20220327132220099.png)
-
-#### Critical Section using Compare and Swap
-
-![image-20220327132348516](operating_system_05.assets/image-20220327132348516.png)
-
-#### Exchange Instruction
-
-![image-20220327133026901](operating_system_05.assets/image-20220327133026901.png)
-
-#### Critical Section using Exchange
-
-![image-20220327133049499](operating_system_05.assets/image-20220327133049499.png)
-
-#### Special Instructions: +/-
-
-![image-20220327133230030](operating_system_05.assets/image-20220327133230030.png)
-
-
-
-### Semaphore
-
--   A variable that provides a simple abstraction for controlling access to a common resource in a programming environment
--   The value of the semaphore variable can be changed by only 2 operations
-    -   V operation (also known as "signal")
-        -   Increment the semaphore
-    -   P operation (also known as "wait")
-        -   Decrement the semaphore
-    -   The value of the semaphore **S** is usually the number of units of the resource that are currently available.
-
-#### Type of Semaphore
-
--   Binary semaphore
-    -   Have a value of 0 or 1
-        -   0 (locked, unavailable)
-        -   1 (unlocked, available)
--   Counting semaphore
-    -   Can have an arbitrary resource count
+![image-20220330011022784](operating_system_05.assets/image-20220330011022784.png)
