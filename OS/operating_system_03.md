@@ -117,6 +117,11 @@ void fork2() {
 
 ![image-20220319031753037](operating_system_03.assets/image-20220319031753037.png)
 
+-   `exec()`
+    -   overlay new image
+-   `wait()`
+    -   sleep until child is done
+
 #### Destroying Process
 
 -   *`void exit(int status)`*
