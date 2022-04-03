@@ -73,21 +73,65 @@
 
 #### FCFS (First-Come First-Served)
 
-![image-20220330010958427](operating_system_05.assets/image-20220330010958427.png)
+![image-20220330014147881](operating_system_05.assets/image-20220330014147881.png)
 
 
 
 #### SJF (Shortest-Job-First)
 
 -   각 프로세스의 다음번 CPU burst time을 가지고 스케줄링에 활용
+
 -   CPU burst time이 가장 짧은 프로세스를 제일 먼저 스케줄링
+
 -   Two schemes:
     -   Nonpreemptive
         -   일단 CPU를 점유하면 이번 CPU burst가 완료될 때까지 CPU를 선점당하지 않음
+        
+            ![image-20220330085518997](operating_system_05.assets/image-20220330085518997.png)
+        
     -   Preemptive
         -   현재 수행중인 프로세스의 남은 burst time보다 더 짧은 CPU burst time을 가지는 새로운 프로세스가 도착하면 CPU를 빼앗김
+        
         -   이 방법을 Shortest-Remaining-Time-First (SRTF)라고도 부른다.
+        
+            ![image-20220330085552571](operating_system_05.assets/image-20220330085552571.png)
+    
 -   SJF is optimal
     -   주어진 프로세스들에 대해 minimum average waiting time을 보장
+    
+-   Long process가 starvation 문제를 가질 수 있다.
 
-![image-20220330011022784](operating_system_05.assets/image-20220330011022784.png)
+#### 다음 CPU Burst Time의 예측
+
+-   다음번 CPU burst time을 어떻게 알 수 있는가? (input data, branch, user, ...)
+-   추정(estimate)만이 가능
+-   과거의 CPU burst time을 이용해 추정 (exponential averaging)
+
+![image-20220330090458494](operating_system_05.assets/image-20220330090458494.png)
+
+#### Priority Scheduling
+
+-   A priority number (integer) is associated with each process
+-   highest priority를 가진 프로세스에게 CPU 할당
+    -   (smallest integer = highest priority)
+        -   Preemptive
+        -   Nonpreemptive
+-   SJF는 일종의 priority scheduling이다.
+    -   priority = predicted next CPU burst time
+-   Problem
+    -   Starvation: low priority processes **may never execute**
+-   Solution
+    -   Aging: as time progresses increase the priority of the process
+
+#### Round Robin (RR)
+
+-   각 프로세스는 동일한 크기의 할당 시간(time quantum)을 가짐
+    -   일반적으로 10-100 milliseconds
+-   할당 시간이 지나면 프로세스는 preempted당하고 ready queue의 제일 뒤에 가서 줄을 선다.
+-   n개의 프로세스가 ready queue에 있고 할당 시간이 q time unit인 경우 각 프로세스는 최대 q time unit 단위로 CPU 시간의 1/n을 얻는다.
+    -   즉, 어떤 프로세스도 (n-1)q time unit 이상 기다리지 않는다.
+-   Performance
+    -   q large -> FIFO
+    -   q small -> context switch 오버헤드가 커진다.
+-   일반적으로 SJF보다 average turnaround time이 길지만 **response time은 더 짧다.**
+
