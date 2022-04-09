@@ -4,7 +4,10 @@
 
 ![image-20220311092558777](git_02.assets/image-20220311092558777.png)
 
-### Master Branch
+*이미지에 나타난 깃 관리 방식은 [Git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) 이며 아래 내용은 해당 방식을 기준으로 서술되어있다.*</br>
+*이 외에 github-flow 와 gitlab-flow 그리고 truck-based development (TBD)  있다.*
+
+### Master Branch (Main branch)
 
 -   릴리즈 이력을 관리하기 위해 사용
 -   즉, 배포 가능한 상태만을 관리한다.
@@ -13,22 +16,27 @@
 
 -   다음 출시될 버전을 개발하는 브랜치
 -   **기능 개발을 위한 브랜치들을 병합**하기 위해 사용
--   모든 기능이 추가되고 버그가 수정되어 배포 가능한 상태라면 `develop` 브랜치를 `master` 브랜치에 `merge`한다.
+-   모든 기능이 추가되고 버그가 수정되어 배포 가능한 상태라면:
+    -   (1) `develop` 브랜치에서 `release` 브랜치를 생성
+    -   (2) 그 후 `master` 브랜치와 `develop` 브랜치에 각각 `merge`한다.
 
 ### Feature Branch
 
 -   `feature` 브랜치는 새로운 기능 개발 및 버그 수정이 필요할 때마다 `develop` 브랜치로부터 분기한다.
--   `feature`브랜치에서의 작업은 기본적으로 **공유할 필요가 없기 때문에, 자신의 로컬 저장소에서 관리**한다.
+-   `feature`브랜치에서의 작업은 기본적으로 **공유할 필요가 없기 때문에, 자신의 로컬 저장소에서 관리**한다. (다만, 브랜치 관리 방식을 사용하냐에 따라 다를 수 있다)
 -   개발이 완료되면 `develop` 브랜치로 `merge`하여 다른 사람들과 공유한다.
+-   (권장) 1 task - 1 feature branch
 
 ### Release Branch
 
 -   배포를 위한 전용 브랜치를 사용함으로써 **한 팀이 해당 배포를 준비하는 동안 다른 팀은 다음 기능 개발을 계속**할 수 있다.
+-   배포 준비 중에 발생하는 수정사항은 반드시 이 브랜치에서 작업한다.
 
 ### Hotfix Branch
 
 -   배포한 버전에 긴급하게 수정을 해야 할 필요가 있을 경우, `master` 브랜치에서 분기하는 브랜치이다.
 -   `develop` 브랜치에서 문제가 되는 부분을 수정하여 배포 가능한 버전을 만들기에는 **시간도 많이 소요되고 안정성을 보장하기도 어렵다.**
+    - e.g., `develop` 에 이미 메이저(혹은 마이너) 버전에 적용할 기능이 반영되어 있는 경우 작업하려면 `master` 와 싱크가 맞는 이전 커밋을 찾아야 하고 작업하고 나서 `develop` 에 머지 할 때 conflict 없을거라는 보장이 절대로 없다. 
 -   따라서, 배포가 가능한 `master` 브랜치에서 직접 브랜치를 만들어 필요한 부분만을 수정한 후 `merge`하여 이를 배포한다.
 
 ### 명령어
@@ -75,3 +83,9 @@ $ git merge [--no-ff] [branch_name]
 -   `merge`하는 두 브랜치에서 같은 파일의 같은 부분을 동시에 수정하고 `merge`하면, git은 해당 부분을 자동으로 `merge`해주지 못한다.
 -   Git은 자동으로 Merge 하지 못해서 새 커밋이 생기지 않는다. 변경사항의 충돌을 개발자가 해결하지 않는 한 Merge 과정을 진행할 수 없다. Merge 충돌이 일어났을 때 Git이 어떤 파일을 Merge 할 수 없었는지 살펴보려면 `git status` 명령을 이용한다.
 -   충돌을 해결하고 나면, `3-Way Merge`와 동일한 방식으로 `merge`한다.
+
+#### Pull Request
+
+- 공동작업의 경우 merge(이하 머지) 는 주로 Pull Request(PR)을 통해 진행된다.
+- 실무에서는 PR 시 Unit test 와 같은 테스트 코드를 작성하고 Circle CI / GitHub Actions 등을 통해 테스트 코드를 돌린다. 결과가 실패시 머지가 불가하도록 설정할 수 있다.
+- PR 중 추가 작업이 필요한 경우, Label 기능을 통해 `WIP` 와 같은 태그를 남길 수 있다.
