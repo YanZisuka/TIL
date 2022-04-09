@@ -54,7 +54,7 @@
 
 ![img](https://blog.kakaocdn.net/dn/Tt5OY/btrci8ZA5yJ/BclKSGo2XXxRHGIcqZIZdk/img.png)
 
-**Eeasy-read**
+**Easy-read**
 
 | Shape | Meaning | How to say | 
 | --- | --- | --- |
