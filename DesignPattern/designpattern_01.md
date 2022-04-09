@@ -17,19 +17,29 @@
 
 -   클래스는 **이름, 속성(변수), 메서드 순으로 나열**
 -   `+`: public, `#`: internal, `-`: private
+    - 자세한 내용은 하단에 Access Level 참고
 -   `[*]`나 `[0...1]`은 리스트와 같은 변수에 지정된 사이즈를 뜻한다.
 -   속성(변수)
     -   `{Access level} {field name}: {type}`
 
+**Access Level (Swift 기준)**
+
+| Access Level | Symbol | Description |
+| --- | --- | --- |
+| open | `++` | public + Overridable |
+| public | `+` | 모듈을 import 한 모든 파일에서 접근 가능 |
+| internal | `~` or `#` | 모듈 안에 정의된 모든 파일에서 접근 가능 |
+| fileprivate | `-~` | 정의된 파일 내에서만 접근 가능 |
+| private | `-` | 선언부 및 같은 파일내의 extension 에서 접근 가능 |
 
 
 #### Stereo Type
 
 ![img](https://blog.kakaocdn.net/dn/UBY4t/btrb7uC3HQ4/gec0YzkdtvJ8urNOh8Y4vk/img.png)
 
--   인터페이스나 추상 클래스와 같은 요소를 표기하기 위해 `<<>>`와 같은 문법을 사용하는데 이를 **길러멧(guillemet)이라 한다.**
+-   인터페이스나 추상 클래스와 같은 요소를 표기하기 위해 `<<...>>`와 같은 문법을 사용하는데 이를 **길러멧(guillemet)이라 한다.**
 -   길러멧은 보통 인터페이스, enum, 추상 클래스 등에서 사용되지만 확장 클래스를 의미하는 데에도 사용될 수 있다.
-
+    - `static` 프로퍼티 혹은 함수를 나타낼 때 사용하기도 한다. e.g., `+ <<static>> shared: SingletonClass`
 
 
 #### Abstract Class
@@ -44,5 +54,27 @@
 
 ![img](https://blog.kakaocdn.net/dn/Tt5OY/btrci8ZA5yJ/BclKSGo2XXxRHGIcqZIZdk/img.png)
 
+**Eeasy-read**
+
+| Shape | Meaning | How to say | 
+| --- | --- | --- |
+| plain arrowhead | Association | `has a` |
+| open arrowhead | Inheritance | `is a` |
+| open arrowhead with a dashed line | Implementation | `implements` or `conforms to` |
+| plain arrowhead with a dashed line| Dependency | `uses` |
+
+**Use cases of a plain arrowhead with a dashed line**
+
+- A weak property.
+- An object that’s passed into a method as a parameter, but not held as a property.
+- A loose coupling or callback.
 
 
+### Additional
+
+**How to draw the NESTED CLASS?**
+
+<details>
+Hint: using a dot
+</details>
+ 
