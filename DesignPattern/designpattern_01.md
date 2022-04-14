@@ -21,37 +21,6 @@
     
     - 자세한 내용은 하단에 Access Level 참고
     
-    ```typescript
-    class Base {
-        public defaultAge = 30;
-        protected birthYear = 1989;
-        private identifier = '890101-1XXXXXX';
-    }
-    
-    class Member extends Base {
-        age = 1;
-        
-        public getAge() {
-            return this.age + this.defaultAge;
-        }
-        
-        protected getBirthYear() {
-            return this.birthYear;
-        }
-        
-        private getID() {
-            return this.identifier;  // Access denied
-        }
-    }
-    
-    let member = new Member();
-    console.log(member.getAge());  // 31
-    console.log(member.getBirthYear());  // Access denied
-    console.log(member.getID());  // Access denied
-    ```
-    
-    
-    
 -   `[*]`나 `[0...1]`은 리스트와 같은 변수에 지정된 사이즈를 뜻한다.
 
 -   속성(변수)
@@ -103,6 +72,39 @@
 - A weak property.
 - An object that’s passed into a method as a parameter, but not held as a property.
 - A loose coupling or callback.
+
+### Snippet
+
+-   `typescript`로 **접근 제한자, 상속** 구현
+
+```typescript
+class Base {
+    public defaultAge = 30;
+    protected birthYear = 1989;
+    private identifier = '890101-1XXXXXX';
+}
+
+class Member extends Base {
+    age = 1;
+
+    public getAge() {
+        return this.age + this.defaultAge;
+    }
+
+    protected getBirthYear() {
+        return this.birthYear;
+    }
+
+    private getID() {
+        return this.identifier;  // Access denied
+    }
+}
+
+let member = new Member();
+console.log(member.getAge());  // 31
+console.log(member.getBirthYear());  // Access denied
+console.log(member.getID());  // Access denied
+```
 
 
 ### Additional
