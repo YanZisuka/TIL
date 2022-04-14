@@ -36,7 +36,7 @@
         }
         
         protected getBirthYear() {
-            return this.birthYear
+            return this.birthYear;
         }
         
         private getID() {
