@@ -246,19 +246,433 @@ do {
 ### Semaphore
 
 -   A variable that provides a simple abstraction for controlling access to a common resource in a programming environment
--   앞에서 소개된 방식들을 추상화시킨 것
--   The value of the semaphore variable can be changed by only 2 operations
-    -   V operation (also known as "signal")
-        -   Increment the semaphore
+
+-   앞에서 소개된 방식들을 추상화시킨 것 **(일종의 추상 자료형)**
+
+-   **Integer variable**
+
+-   **The value of the semaphore variable can be changed by only 2 "atomic" operations**
+    
     -   P operation (also known as "wait")
         -   Decrement the semaphore
+        
+        ```pseudocode
+        P(S):	while (S<=0) do no-op;  /* i.e. wait */
+        		S--;
+        ```
+        
+    -   V operation (also known as "signal")
+    
+        -   Increment the semaphore
+    
+        ```pseudocode
+        V(S):	S++;
+        ```
+    
     -   The value of the semaphore **S** is usually the number of units of the resource that are currently available.
+
+#### Critical Section of n Processes
+
+```C
+// Synchronization variable
+semaphore mutex; /* initially 1: 1개가 CS에 들어갈 수 있다. */
+
+// Process Pi
+do {
+    P(mutex);
+    critical section
+    V(mutex);
+    remainder section
+} while(1);
+```
+
+-   Busy-wait는 효율적이지 못함(=spin lock)
+    -   Block & Wakeup 방식의 구현(=sleep lock)
+
+#### Block/Wakeup Implementation
+
+-   Semaphore를 다음과 같이 정의
+
+    ```pseudocode
+    typedef struct
+    {	int value;	/* semaphore */
+    	struct process *L;	/* process wait queue */
+    } semaphore;
+    ```
+
+-   block과 wakeup을 다음과 같이 가정
+
+-   **block**
+
+    -   커널은 block을 호출한 프로세스를 suspend시킴
+    -   이 프로세스의 PCB를 semaphore에 대한 wait queue에 넣음
+
+-   **wakeup(P)**
+
+    -   block된 프로세스 P를 wakeup시킴
+    -   이 프로세스의 PCB를 ready queue로 옮김
+
+-   Semaphore 연산이 이제 다음과 같이 정의됨
+
+    ```C
+    P(S):	S.value--;
+    		if(S.value < 0) {
+                add this process to S.L;
+             	block();
+            }
+    ```
+
+    ```C
+    V(S):	S.value++;
+    		if(S.value <= 0) {
+                remove a process P from S.L;
+                wakeup(P);
+            }
+    ```
+
+#### Busy-wait vs. Block/Wakeup
+
+-   Block/Wakeup overhead vs. Critical section 길이
+    -   Critical section의 길이가 긴 경우 Block/Wakeup이 적당
+    -   Critical section의 길이가 매우 짧은 경우 Block/Wakeup 오버헤드가 busy-wait 오버헤드보다 더 커질 수 있음
+    -   일반적으로는 Block/Wakeup 방식이 더 뛰어남
 
 #### Type of Semaphore
 
--   Binary semaphore
+-   Binary semaphore(=mutex)
+
+    -   주로 mutual exclusion (lock/unlock)에 사용
+
     -   Have a value of 0 or 1
         -   0 (locked, unavailable)
         -   1 (unlocked, available)
+
 -   Counting semaphore
-    -   Can have an arbitrary resource count
+
+    -   Can have an arbitrary **resource count**
+    -   도메인이 0 이상인 임의의 정수
+
+
+
+### Deadlock & Starvation
+
+-   **Deadlock**
+
+    -   **둘 이상의 프로세스가 서로 상대방에 의해 충족될 수 있는 event를 무한히 기다리는 현상**
+
+    -   S와 Q가 1로 초기화된 semaphore라고 해보자.
+
+    ```pseudocode
+    P0:	P(S); P(Q); ... V(S); V(Q);	/* 자원을 하나씩 차지하고 상대방 것을 요구함 */
+    P1:	P(Q); P(S); ... V(Q); V(S);
+    ```
+
+-   **Starvation**
+
+    -   **Indefinite blocking**
+    -   프로세스가 suspend된 이유에 해당하는 semaphore queue에서 빠져나갈 수 없는 현상
+
+
+
+### Semaphore의 문제점
+
+-   코딩이 어렵다
+-   정확성(correctness)의 입증이 어렵다
+-   자발적 협력(voluntary cooperation)이 필요하다
+-   한번의 실수가 모든 시스템에 치명적인 영향을 줌
+
+```pseudocode
+/* Mutual exclusion 깨짐 */
+V(mutex)
+critical section
+P(mutex)
+
+/* Deadlock */
+P(mutex)
+critical section
+P(mutex)
+```
+
+
+
+### Monitor
+
+![image-20220416160825544](operating_system_06.assets/image-20220416160825544.png)
+
+-   동시 수행중인 프로세스 사이에서 abstract data type의 안전한 공유를 보장하기 위한 high-level synchronization construct
+
+```pseudocode
+monitor monitor-name {
+	shared variable delarations
+	procedure body P1 (...) {
+		...
+	}
+	procedure body P2 (...) {
+		...
+	}
+	{
+		initialization code
+	}
+}
+```
+
+-   모니터 내에서는 한번에 하나의 프로세스만이 활동 가능
+-   프로그래머가 동기화 제약 조건을 명시적으로 코딩할 필요가 없음
+-   프로세스가 모니터 안에서 기다릴 수 있도록 하기 위해 **condition variable** 사용
+-   condition variable은 **wait와 signal** 연산에 의해서만 접근 가능
+    -   **x.wait();**
+        -   x.wait()을 invoke한 프로세스는 다른 프로세스가 x.signal()을 invoke하기 전까지 suspend된다.
+    -   **x.signal();**
+        -   x.signal()은 정확하게 하나의 **suspend된** 프로세스를 resume한다.
+        -   suspend된 프로세스가 없으면 아무 일도 일어나지 않는다.
+
+
+
+## Chapter 7. Synchronization Examples
+
+### Bounded-Buffer Problem
+
+-   두 개의 producer나 consumer들이 하나의 자원에 동시에 접근할 경우 문제가 됨
+    -   Mutual exclusion -> Need binary semaphore
+-   Producer나 consumer가 요구하는 자원이 하나도 없을 경우 문제가 됨
+    -   Resource count -> Need integer semaphore
+
+#### Producer
+
+1.   Empty 버퍼가 있나요? (없으면 기다림)
+2.   공유 데이터에 lock을 건다.
+3.   Empty buffer에 데이터 입력 및 buffer 조작
+4.   Lock을 푼다
+5.   Full buffer 하나 증가
+
+#### Consumer
+
+1.   Full 버퍼가 있나요? (없으면 기다림)
+2.   공유 데이터에 lock을 건다.
+3.   Full buffer에서 데이터 꺼내고 buffer 조작
+4.   Lock을 푼다
+5.   Empty buffer 하나 증가
+
+#### Implementation with Semaphore
+
+```C
+// Synchronization variables
+semaphore full = 0, empty = n, mutex = 1;
+
+// Producer
+do {
+    ...
+    produce an item in x
+    ...
+    P(empty);
+    P(mutex);
+    ...
+    add x to buffer
+    ...
+    V(mutex);
+    V(full);
+} while(1);
+
+// Consumer
+do {
+    P(full);
+    P(mutex);
+    ...
+    remove an item from buffer to y
+    ...
+    V(mutex);
+    V(empty);
+    ...
+    consume the item in y
+    ...
+} while(1);
+```
+
+#### Implementation with Monitor
+
+```pseudocode
+monitor bounded_buffer {
+	int buffer[N];
+	condition full, empty; /* condition var.은 값을 가지지 않고 자신의 큐에 프로세스를 매달아서 sleep 시키거나, 큐에서 프로세스를 깨우는 역할만 함 */
+	
+	void produce (int x) {
+		if there is no empty buffer
+			empty.wait();
+		add x to an empty buffer
+		full.signal();
+	}
+	
+	void consume (int *x) {
+		if there is no full buffer
+			full.wait();
+		remove an item from buffer and store it to *x
+		empty.signal();
+	}
+}
+```
+
+
+
+### Readers-Writers Problem
+
+-   한 process가 DB에 write 중일 때 다른 process가 접근하면 안 됨
+-   Read는 동시에 가능
+
+#### Solution
+
+-   Writer가 DB에 접근 허가를 아직 얻지 못한 상태에서는 모든 대기중인 Reader들을 다 DB에 접근하게 해준다.
+-   Writer는 대기중인 Reader가 하나도 없을 때 DB 접근이 허용된다.
+-   일단 Writer가 DB에 접근 중이면 Reader들은 접근이 금지된다.
+-   Writer가 DB에서 빠져나가야만 Reader의 접근이 허용된다.
+
+#### Implementation
+
+```C
+// Shared data
+int readCount = 0;
+DB;
+
+// Synchronization variables
+semaphore mutex = 1, db = 1;
+
+// Writer
+P(db);
+...
+writing DB is performed
+...
+V(db);
+
+/* ! Starvation 발생 가능 */
+
+// Reader
+P(mutex);
+readCount++;
+if (readCount == 1) P(db); /* Block writer */
+V(mutex);
+...
+reading DB is performed
+...
+P(mutex);
+readCount--;
+if (readCount == 0) V(db); /* Enable writer */
+V(mutex);
+```
+
+
+
+### Dining-Philosophers Problem
+
+![image-20220416141331912](operating_system_06.assets/image-20220416141331912-16501086455631.png)
+
+```C
+// Synchronization variables
+Semaphore chopstick[5];
+/* Initially all values are 1 */
+
+// Philosopher i
+do {
+    P(chopstick[i]);
+    P(chopstick[(i+1) % 5]);
+    ...
+    eat();
+    ...
+    V(chopstick[i]);
+    V(chopstick[(i+1) % 5]);
+    ...
+    think();
+    ...
+} while(1);
+```
+
+-   위 Solution의 문제점
+    -   Deadlock의 가능성
+    -   모든 철학자가 동시에 배가 고파져 왼쪽 젓가락을 집어버린 경우
+-   해결 방안
+    -   4명의 철학자만이 테이블에 동시에 앉을 수 있도록 한다.
+    -   젓가락을 두 개 모두 집을 수 있을 때만 젓가락을 집게 한다.
+    -   비대칭
+        -   짝수(홀수) 철학자는 왼쪽(오른쪽) 젓가락부터 집도록
+
+#### Implementation with Semaphore
+
+```C
+enum {thinking, hungry, eating} state[5];
+semaphore self[5] = 0;
+semaphore mutex = 1;
+
+// Philosopher i
+do {
+    pickup(i);
+    eat();
+    putdown(i);
+    think();
+} while(1);
+
+void putdown(int i) {
+    P(mutex);
+    state[i] = thinking;
+    test((i+4) % 5);
+    test((i+1) % 5);
+    V(mutex);
+}
+
+void pickup(int i) {
+    P(mutex);
+    state[i] = hungry;
+    test(i);
+    V(mutex);
+    P(self[i]);
+}
+
+void test(int i) {
+    if(state[(i+4) % 5] != eating && state[i] == hungry && state[(i+1) % 5] != eating) {
+        state[i] = eating;
+        V(self[i]);
+    }
+}
+```
+
+#### Implementation with Monitor
+
+```C
+monitor dining_philosopher {
+    enum {thinking, hungry, eating} state[5];
+    condition self[5];
+    
+    void pickup(int i) {
+        state[i] = hungry;
+        test(i);
+        if(state[i] != eating)
+            self[i].wait();
+    }
+    
+    void putdown(int i) {
+        state[i] = thinking;
+        /* test left and right neighbors */
+        test((i+4) % 5); /* if L is waiting */
+        test((i+1) % 5);
+    }
+    
+    void test(int i) {
+        if((state[(i+4) % 5] != eating) && (state[i] == hungry) && (state[(i+1) % 5] != eating)) {
+            state[i] = eating;
+            self[i].signal(); /* wake up Pi */
+        }
+    }
+    
+    void init() {
+        for(int i = 0; i < 5; i++) {
+            state[i] = thinking;
+        }
+    }
+}
+
+Each philosopher:
+{
+    pickup(i);
+    eat();
+    putdown(i);
+    think();
+} while(1);
+```
+
