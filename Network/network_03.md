@@ -205,16 +205,34 @@
 
 #### Reliable data transfer
 
--   TCP connection이 생기면 각 socket마다 **SEND buffer와 RECEIVE buffer가** 생성된다.
+-   TCP connection이 생기면 각 socket마다 **SendBuffer와 RcvBuffer가** 생성된다.
 -   한 번에 window의 크기만큼의 데이터만 전송할 수 있다.
 -   ACK#xxxx 를 받은 후, 이 **ACK#xxxx 이전의 seq #를 가진 데이터들은 재전송할 일이 없으므로 버퍼에서 내보내고, SEND_BASE, timer, window 포인터가 #xxxx segment로 이동한다.**
--   즉, *SEND buffer*는 재전송을 구현, *RECEIVE buffer*는 in-order transfer를 구현
+-   즉, *SendBuffer*는 재전송을 구현, *RcvBuffer*는 in-order transfer를 구현
+-   `SOCK_WRITE`할 때 App layer에서 SendBuffer로, `SOCK_READ`할 때 RcvBuffer에서 App layer로 올라간다.
 
 
 
 #### Fast retransmit
 
 ![image-20220420005451451](network_03.assets/image-20220420005451451.png)
+
+```pseudocode
+event: ACK received, with ACK field value of y
+	if (y > SendBase) {
+	SendBase = y
+	if (there are currently any not yet acknowledged segments)
+		start timer
+		} else {/* a duplicate ACK for already ACKed segment */
+			increment number of duplicate ACKs received for y
+			if (number of duplicate ACKs received for y == 3)
+			/* TCP fast retransmit */
+			resend segment with sequence number y
+			}
+		break;
+```
+
+
 
 -   time-out period often relatively long:
     -   long delay before resending lost packet
@@ -223,3 +241,48 @@
     -   if segment is lost, there will likely be many duplicate ACKs
         -   **if sender receives 3 ACKs for same data, resend unacked segment with smallest seq #**
 
+
+
+#### TCP Flow Control
+
+-   `SOCK_READ` system call을 너무 빠르게 하거나, 너무 느리게 하는 경우 buffer의 용량이 문제가 된다.
+-   따라서 보내는 속도는 receiver가 읽어가는 속도(`rwnd`)에 맞춰야 함
+-   Header의 receive window가 이를 위한 영역
+-   `rwnd = 0`인데, 보낼 segment가 없는 경우가 문제가 된다.
+    -   segment가 나가는 경우는 `SOCK_WRITE`를 해서 SEND buffer에서 보내거나, 상대방에게 받아서 ACK를 보내는 경우 뿐이다.
+    -   따라서 상대방의 `rwnd = 0`이라고 report된 경우, SEND buffer에서 prove라는 1byte의 segment를 주기적으로 보낸다. (header가 40byte, body가 1byte)
+-   Clark's solution
+    -   Receiving TCP announces rwnd = 0 until:
+        -   Enough space to accommodate a segment of maximum size
+        -   Or half of the buffer is empty
+-   Delayed ACK
+    -   Wait up to 500ms for next segment. If no next segment. send ACK
+
+
+
+#### Connection Management
+
+##### 2-way handshake:
+
+-   variable delays
+-   retransmitted messages (e.g., req_conn(x)) due to message loss
+-   message reordering
+-   can't "see" other side
+
+##### TCP 3-way handshake
+
+![image-20220422011233296](network_03.assets/image-20220422011233296.png)
+
+-   **SYN** message는 header만 나간다.
+-   3번째 message는 일반적인 TCP segment이다.
+
+##### TCP: closing a connection
+
+![image-20220422012556521](network_03.assets/image-20220422012556521.png)
+
+-   client, server each close their side of connection
+    -   send TCP segment with `FIN` bit = 1
+-   respond to received `FIN` with `ACK`
+    -   on receiving `FIN, ACK` can be combined with own `FIN`
+-   simultaneous `FIN` exchanges can be handled
+-   ACK 유실때문에 Timed wait가 존재한다.
