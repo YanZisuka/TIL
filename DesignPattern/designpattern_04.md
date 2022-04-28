@@ -25,36 +25,36 @@
 
 -   **`Robot` 추상 클래스**
 
-    ```javascript
+    ```typescript
     class Robot {
-        const name;
-        
-        constructor(name) {
+        private name: string;
+    
+        public constructor(name: string) {
             this.name = name;
         }
         
-        const getName = function () {
-            return name;
+        public getName: Function = function (): string {
+            return this.name;
         }
         
-        const attack = function () {};
-    const move = function () {};
+        public attack: Function = function () {};
+        public move: Function = function () {};
     }
     ```
 
 -   **`Atom` 구현 클래스**
 
-    ```javascript
+    ```typescript
     class Atom extends Robot {
-        constructor(name) {
+        public constructor(name) {
             super(name);
         }
         
-    const attack = function () {
+        public attack: Function = function (): void {
             console.log('Punch!');
         }
         
-        const move = function () {
+        public move: Function = function (): void {
             console.log('Fly')
         }
     }
@@ -62,12 +62,14 @@
 
 -   **`Client` 클래스**
 
-    ```javascript
+    ```typescript
     class Client {
-        const atom = new Atom('Atom');
-    	
-    console.log('My name is ' + atom.getName());
-    atom.move();
+        public main: Function = (): void => {
+            const atom = new Atom('Atom');
+            
+            console.log('My name is ' + atom.getName());
+            atom.move();
+        }
     }
     ```
 
@@ -114,33 +116,33 @@
 
 -   **`Robot` 추상 클래스**
 
-    ```javascript
+    ```typescript
     class Robot {
-        const name;
-        const movingStrategy;
-        const attackStrategy;
+        private name: string;
+        private movingStrategy;
+        private attackStrategy;
         
         constructor(name) {
             this.name = name;
         }
         
-        const getName = function () {
-            return name;
+        public getName: Function = function (): string {
+            return this.name;
         }
     
-    const move = function () {
+        public move: Function = function (): void {
             movingStrategy.move();
         }
         
-        const attack = function () {
+        public attack: Function = function (): void {
             attackStrategy.attack();
         }
         
-        const setMovingStrategy = function (movingStrategy) {
+        public setMovingStrategy = function (movingStrategy): void {
             this.movingStrategy = movingStrategy;
         }
         
-        const setAttackStrategy = function (attackStrategy) {
+        public setAttackStrategy = function (attackStrategy): void {
             this.attackStrategy = attackStrategy;
         }
     }
@@ -148,9 +150,9 @@
 
 -   **`Atom` 클래스**
 
-    ```javascript
+    ```typescript
     class Atom extends Robot {
-        constructor(name) {
+        public constructor(name: string) {
             super(name);
         }
     }
@@ -160,7 +162,7 @@
 
     ```typescript
     interface MovingStrategy {
-        const move = function () {};
+        move: Function;
     }
     ```
 
@@ -168,7 +170,7 @@
 
     ```typescript
     class FlyingStrategy implements MovingStrategy {
-        const move = function () {
+        public move: Function = function (): void {
             console.log('Fly!');
         }
     }
@@ -176,14 +178,16 @@
 
 -   **`Client` 클래스**
 
-    ```javascript
+    ```typescript
     class Client {
-        const atom = new Atom('Atom');
-    
-    atom.setMovingStrategy(new FlyingStrategy());
-    	
-    console.log('My name is ' + atom.getName());
-    atom.move();
+        public main: Function = function (): void {
+            const atom = new Atom('Atom');
+        
+            atom.setMovingStrategy(new FlyingStrategy());
+                
+            console.log('My name is ' + atom.getName());
+            atom.move();
+        }
     }
     ```
 
@@ -250,28 +254,28 @@
 
 -   **오리지네이터**
 
-```javascript
+```typescript
+class State {
+    // 남은 시도
+    public attemptsRemaining: number = 3
+    // 레벨
+    public level: number = 1
+    // 점수
+    public score: number = 0
+}
+
 class Game {
     
-    class State {
-        // 남은 시도
-    	const attemptsRemaining = 3
-	// 레벨
-	const level = 1
-	// 점수
-	const score = 0
-    }
-	
-const state = new State()
+    public state = new State()
     
     // 보스를 잡아 점수 획득
-    const rackUpMassivePoints = function() {
-        state.score += 9000
+    public rackUpMassivePoints: Function = function(): void {
+        this.state.score += 9000
     }
     
     // 몬스터가 플레이어를 kill
-    const monstersKillPlayer = function() {
-        state.attemptsRemaing -= 1
+    public monstersKillPlayer: Function = function(): void {
+        this.state.attemptsRemaing -= 1
     }
     
 }
@@ -279,31 +283,31 @@ const state = new State()
 
 -   **메멘토**
 
-```javascript
+```typescript
 const GameMemento = Data
 ```
 
 -   **케어테이커**
 
-```javascript
+```typescript
 class GameSystem {
     // 데이터로부터 게임을 복구
-    const decoder = JSON.parse
-// 게임을 데이터로 저장
-const encoder = JSON.stringify
+    private decoder = JSON.parse
+    // 게임을 데이터로 저장
+    private encoder = JSON.stringify
     // 로컬 데이터 저장소
-    const userDefaults = {}
+    private userDefaults = {}
     
     // 저장 로직을 캡슐화. 로컬데이터 저장소에 오리지네이터를 메멘토 객체로 인코딩 후 저장
-    function save(game, title) {
-        const data = encoder(game)
-        userDefaults.title = data
+    public save: Function = (game: object, title: string): void => {
+        const data = this.encoder(game)
+        this.userDefaults[title] = data
     }
 	
-// 로딩 로직을 캡슐화. 메멘토 객체를 오리지네이터로 복구해서 리턴
-function load(title) {
-        const data = userDefaults[title]
-        const game = decoder(data)
+    // 로딩 로직을 캡슐화. 메멘토 객체를 오리지네이터로 복구해서 리턴
+    public load: Function = (title: string): object => {
+        const data = this.userDefaults[title]
+        const game = this.decoder(data)
         
         return game
     }
@@ -312,7 +316,7 @@ function load(title) {
 
 -   **클라이언트**
 
-```javascript
+```typescript
 let game = new Game()
 game.rackUpMassivePoints()
 
