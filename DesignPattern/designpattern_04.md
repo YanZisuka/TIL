@@ -4,7 +4,7 @@
 
 -   같은 문제를 해결하는 여러 알고리즘이 클래스별로 캡슐화되어 있고 이들이 필요할 때 교체할 수 있도록 함으로써 동일한 문제를 다른 알고리즘으로 해결할 수 있게 하는 패턴
 
-![img](designpattern_04.assets/images%2Fy_dragonrise%2Fpost%2F01b02920-5e7d-4a90-b5be-7cdfe0f6091d%2Fimage.png)
+![img](designpattern_04.assets/strategy1.png)
 
 -   **Strategy**
     -   인터페이스나 추상 클래스로 문제 해결 알고리즘을 호출하는 방법을 명시
@@ -19,7 +19,7 @@
 
 -   로봇을 만드는 상황을 생각해보자.
 
-![img](designpattern_04.assets/images%2Fy_dragonrise%2Fpost%2F7257712b-7f85-4fc6-9de8-a20c60b17a44%2Fimage.png)
+![img](designpattern_04.assets/strategy2.png)
 
 #### 구현
 
@@ -38,7 +38,7 @@
         }
         
         const attack = function () {};
-    	const move = function () {};
+    const move = function () {};
     }
     ```
 
@@ -50,7 +50,7 @@
             super(name);
         }
         
-    	const attack = function () {
+    const attack = function () {
             console.log('Punch!');
         }
         
@@ -66,8 +66,8 @@
     class Client {
         const atom = new Atom('Atom');
     	
-    	console.log('My name is ' + atom.getName());
-    	atom.move();
+    console.log('My name is ' + atom.getName());
+    atom.move();
     }
     ```
 
@@ -87,13 +87,13 @@
 -   구체적 이동 방식, 공격 방식을 담은 클래스를 은닉화
 -   공격, 이동을 위한 인터페이스 생성, 실현할 클래스를 만듦
 
-![img](designpattern_04.assets/images%2Fy_dragonrise%2Fpost%2F3ac40aed-b36b-4971-8e21-dfaf1ec999ca%2Fimage.png)
+![img](designpattern_04.assets/strategy3.png)
 
 
 
 ### 개선된 설계
 
-![img](designpattern_04.assets/images%2Fy_dragonrise%2Fpost%2F6d6e5a35-d28d-44a6-a983-1ecca8691952%2Fdesign pattern.png)
+![img](designpattern_04.assets/strategy4.png)
 
 | 클래스                          | 설명                                            |
 | ------------------------------- | ----------------------------------------------- |
@@ -128,7 +128,7 @@
             return name;
         }
     
-    	const move = function () {
+    const move = function () {
             movingStrategy.move();
         }
         
@@ -180,10 +180,10 @@
     class Client {
         const atom = new Atom('Atom');
     
-    	atom.setMovingStrategy(new FlyingStrategy());
+    atom.setMovingStrategy(new FlyingStrategy());
     	
-    	console.log('My name is ' + atom.getName());
-    	atom.move();
+    console.log('My name is ' + atom.getName());
+    atom.move();
     }
     ```
 
@@ -256,13 +256,13 @@ class Game {
     class State {
         // 남은 시도
     	const attemptsRemaining = 3
-		// 레벨
-		const level = 1
-		// 점수
-		const score = 0
+	// 레벨
+	const level = 1
+	// 점수
+	const score = 0
     }
 	
-	const state = new State()
+const state = new State()
     
     // 보스를 잡아 점수 획득
     const rackUpMassivePoints = function() {
@@ -289,8 +289,8 @@ const GameMemento = Data
 class GameSystem {
     // 데이터로부터 게임을 복구
     const decoder = JSON.parse
-	// 게임을 데이터로 저장
-	const encoder = JSON.stringify
+// 게임을 데이터로 저장
+const encoder = JSON.stringify
     // 로컬 데이터 저장소
     const userDefaults = {}
     
@@ -300,8 +300,8 @@ class GameSystem {
         userDefaults.title = data
     }
 	
-	// 로딩 로직을 캡슐화. 메멘토 객체를 오리지네이터로 복구해서 리턴
-	function load(title) {
+// 로딩 로직을 캡슐화. 메멘토 객체를 오리지네이터로 복구해서 리턴
+function load(title) {
         const data = userDefaults[title]
         const game = decoder(data)
         
