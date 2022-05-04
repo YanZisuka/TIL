@@ -8,6 +8,8 @@
 
 
 
+
+
 ### Multiplexing/Demultiplexing
 
 -   목적 process에 알맞게 전달해주는 일
@@ -34,6 +36,8 @@
 
 
 
+
+
 ### UDP: segment header
 
 ![image-20220329150059328](network_03.assets/image-20220329150059328.png)
@@ -47,6 +51,8 @@
 
 
 
+
+
 ### Principles of reliable data transfer
 
 ![image-20220407151425426](network_03.assets/image-20220407151425426.png)
@@ -54,6 +60,10 @@
 -   important in application, transport, link layers
     -   top-10 list of important networking topics!
     -   하위 계층은 Unreliable channel (Error & Loss)임에도 사용자에게 Reliable channel처럼 보이게 해주는 방법
+
+
+
+
 
 ### RDT(Reliable Data Transfer)
 
@@ -127,12 +137,18 @@
 
 ![image-20220407165456092](network_03.assets/image-20220407165456092.png)
 
+
+
+
+
 ### Pipelined protocols
 
 ![image-20220407170153889](network_03.assets/image-20220407170153889.png)
 
 -   pipelining: sender allows multiple, 'in-flight', yet-to-be-acknowledged pkts
 -   two generic forms of pipelined protocols: *go-Back-N, selective repeat*
+
+
 
 
 
@@ -159,6 +175,8 @@
 
 
 
+
+
 #### TCP segment structure
 
 ![image-20220419235616214](network_03.assets/image-20220419235616214.png)
@@ -178,6 +196,8 @@
 ##### Q: how receiver handles out-of-order segments?
 
 -   A: TCP spec doesn't say, - up to implementor
+
+
 
 
 
@@ -203,6 +223,8 @@
 
 
 
+
+
 #### Reliable data transfer
 
 -   TCP connection이 생기면 각 socket마다 **SendBuffer와 RcvBuffer가** 생성된다.
@@ -210,6 +232,8 @@
 -   ACK#xxxx 를 받은 후, 이 **ACK#xxxx 이전의 seq #를 가진 데이터들은 재전송할 일이 없으므로 버퍼에서 내보내고, SEND_BASE, timer, window 포인터가 #xxxx segment로 이동한다.**
 -   즉, *SendBuffer*는 재전송을 구현, *RcvBuffer*는 in-order transfer를 구현
 -   `SOCK_WRITE`할 때 App layer에서 SendBuffer로, `SOCK_READ`할 때 RcvBuffer에서 App layer로 올라간다.
+
+
 
 
 
@@ -223,13 +247,13 @@ event: ACK received, with ACK field value of y
 	SendBase = y
 	if (there are currently any not yet acknowledged segments)
 		start timer
-		} else {/* a duplicate ACK for already ACKed segment */
-			increment number of duplicate ACKs received for y
-			if (number of duplicate ACKs received for y == 3)
-			/* TCP fast retransmit */
-			resend segment with sequence number y
-			}
-		break;
+	} else {/* a duplicate ACK for already ACKed segment */
+		increment number of duplicate ACKs received for y
+		if (number of duplicate ACKs received for y == 3)
+		/* TCP fast retransmit */
+		resend segment with sequence number y
+		}
+	break;
 ```
 
 
@@ -240,6 +264,8 @@ event: ACK received, with ACK field value of y
     -   sender often sends many segments back-to-back
     -   if segment is lost, there will likely be many duplicate ACKs
         -   **if sender receives 3 ACKs for same data, resend unacked segment with smallest seq #**
+
+
 
 
 
@@ -257,6 +283,8 @@ event: ACK received, with ACK field value of y
         -   Or half of the buffer is empty
 -   Delayed ACK
     -   Wait up to 500ms for next segment. If no next segment. send ACK
+
+
 
 
 
@@ -285,4 +313,139 @@ event: ACK received, with ACK field value of y
 -   respond to received `FIN` with `ACK`
     -   on receiving `FIN, ACK` can be combined with own `FIN`
 -   simultaneous `FIN` exchanges can be handled
--   ACK 유실때문에 Timed wait가 존재한다.
+-   **마지막 ACK 유실의 가능성** 때문에 Timed wait가 존재한다.
+
+
+
+
+
+#### Principles of congestion control
+
+-   **congestion:**
+    -   informally: "too many sources sending too much data too fast for *network* to handle"
+    -   **different from flow control!**
+    -   manifestations:
+        -   lost packets (buffer overflow at routers)
+        -   long delays (queueing in router buffers)
+    -   a top-10 problem!
+
+##### Causes/costs of congestion: scenario 1
+
+![image-20220504213036735](network_03.assets/image-20220504213036735.png)
+
+![image-20220504213054015](network_03.assets/image-20220504213054015.png)
+
+-   two senders, two receivers
+-   one router, infinite buffers
+-   output link capacity: R
+-   no retransmission
+
+##### Causes/costs of congestion: scenario 2
+
+![image-20220504213327384](network_03.assets/image-20220504213327384.png)
+
+![image-20220504213343208](network_03.assets/image-20220504213343208.png)
+
+-   one router, *finite* buffers
+-   sender retransmission of timed-out packet
+    -   application-layer input = application-layer output
+    -   transport-layer input includes *retransmissions*
+-   **idealization: perfect knowledge**
+    -   sender sends only when router buffers available
+-   **idealization: known loss**
+    -   packets can be lost, dropped at router due to full buffers
+    -   sender only resends if packet *known* to be lost
+-   **Realistic: duplicates**
+    -   packets can be lost, dropped at router due to full buffers
+    -   sender times out prematurely, sending *two* copies, both of which are delivered
+-   "costs" of congestion:
+    -   more work (retrans) for given "goodput"
+    -   unneeded retransmissions: link carries multiple copies of pkt
+        -   decreasing goodput
+    -   패킷을 많이 보내서 경로가 막혔는데 더 보내는 문제가 존재
+
+##### Causes/costs of congestion: scenario 3
+
+![image-20220504214244842](network_03.assets/image-20220504214244842.png)
+
+![image-20220504214302379](network_03.assets/image-20220504214302379.png)
+
+-   four senders
+-   multihop paths
+-   timeout/retransmit
+-   another "cost" of congestion:
+    -   when packet dropped, any **"upstream"** transmission capacity used for that packet was wasted!
+    -   역설적이게도, 패킷을 많이 보내면 많이 보낼수록 적게(심지어는 아예 못) 받는다.
+
+
+
+
+
+#### TCP congestion control: additive increase multiplicative decrease
+
+![image-20220504221900510](network_03.assets/image-20220504221900510.png)
+
+![image-20220504215937733](network_03.assets/image-20220504215937733.png)
+
+-   **approach:** sender increases transmission rate (window size), probing for usable bandwidth, until loss occurs
+    -   **additive increase:** increase `cwnd (congestion window size)` by 1 `MSS (Maximum Segment Size: 1500bytes)` every `RTT` until loss detected
+    -   **multiplicative decrease:** cut `cwnd` in half after loss
+
+##### TCP Slow Start
+
+![image-20220504220425626](network_03.assets/image-20220504220425626.png)
+
+-   when connection begins, increase rate exponentially until first loss event:
+    -   initially `cwnd` = 1 `MSS`
+    -   double `cwnd` every `RTT`
+    -   done by incrementing `cwnd` for every `ACK` received
+-   **summary:** initial rate is slow but ramps up exponentially fast
+
+##### TCP: switching from slow start to CA
+
+![image-20220504220720844](network_03.assets/image-20220504220720844.png)
+
+-   when should the exponential increase switch to linear?
+    -   when `cwnd` gets to 1/2 of its value before timeout.
+-   **Implementation:**
+    -   variable `ssthresh`
+    -   on loss event, `ssthresh` is set to 1/2 of `cwnd` just before loss event
+        -   Timer expire과 3 dup ACK는 모두 loss event지만, timer expire의 경우가 네트워크가 혼잡하다고 판단 가능하다.
+        -   TCP Reno는 3 dup ACK의 경우 window를 다시 1부터 시작하지 않는다.
+
+
+
+
+
+#### TCP throughput
+
+-   avg. TCP thruput as function of window size, RTT?
+
+    -   ignore slow start, assume always data to send
+
+-   W: window size (measured in bytes) where loss occurs (congestion window size)
+
+    -   avg. window size (# in-flight bytes) is 3/4 W
+    -   avg. thruput is 3/4 W per RTT
+
+    ![image-20220504222215556](network_03.assets/image-20220504222215556.png)
+
+
+
+
+
+#### TCP Fairness
+
+-   **fairness goal:** if K TCP sessions share same bottleneck link of bandwidth R, each should have average rate of R/K
+
+##### Why is TCP fair?
+
+![image-20220504223200600](network_03.assets/image-20220504223200600.png)
+
+-    two competing sessions:
+-   additive increase gives slope of 1, as throughout increases
+-   multiplicative decrease decreases throughput proportionally
+-   connection 단위에서 공평하다는 것 (호스트가 10배의 커넥션을 사용한다면 당연히 10배의 rate를 가짐)
+
+
+
