@@ -13,8 +13,7 @@
 </details>
 
 
-
-<img src="data_structure_05.assets/images%2Fkimdukbae%2Fpost%2F50497c5d-1598-48ad-b7cd-e60b2df366da%2Fimage.png" alt="img" style="zoom: 50%;" />
+<img src="data_structure_05.assets/trie.png" alt="trie" style="zoom: 50%;" />
 
 -   K진 트리의 구조를 띠고 있는 자료구조
 -   우리가 사전에서 단어를 찾는 과정을 생각해보자
