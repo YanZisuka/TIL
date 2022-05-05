@@ -14,6 +14,10 @@
 -   최소 신장 트리(Minimum Spanning Tree)
     -   무향 가중치 그래프에서 신장 트리를 구성하는 간선들의 가중치의 합이 최소인 신장 트리
 
+
+
+
+
 ### Prim Algorithm
 
 ![image-20220401143856969](algorithms_08.assets/image-20220401143856969.png)
@@ -47,6 +51,8 @@ MST_PRIM(Graph, s)
 
 
 
+
+
 ### Kruskal Algorithm
 
 ![image-20220401152301230](algorithms_08.assets/image-20220401152301230.png)
@@ -63,34 +69,84 @@ MST_PRIM(Graph, s)
 
 #### Implementation
 
-```pseudocode
-MST-KRUSKAL(Graph, w)
-	A = 0
-	FOR vertex in Graph.V
-		Make_Set(v)
-	
-	Graph.E에 포함된 간선들을 가중치 w에 의해 정렬
-	
-	FOR 가중치가 가장 낮은 간선 (u, v) in Graph.E (n-1개)
-		IF Find_Set(u) != Find_Set(v)
-			A = A | {(u, v)}
-			Union(u, v)
-			
-	RETURN A
+```python
+def find(v):
+    if parents[v] != v:
+        parents[v] = find(parents[v])
+    return parents[v]
+
+
+def union(v1, v2):
+    a = find(v1)
+    b = find(v2)
+
+    if a < b:
+        parents[b] = a
+    else:
+        parents[a] = b
+
+
+def kruskal():
+    global min_cost
+
+    for i in range(len(edges)):
+        a, b, c = edges[i]
+
+        if find(a) != find(b):
+            union(a, b)
+            min_cost += c
+
+
+edges = []
+
+for _ in range(9):
+    a, b, c = map(int, input().split())
+    edges.append((a, b, c))
+
+parents = [i for i in range(11)]
+min_cost = 0
+
+edges.sort(key=lambda x: x[2])
+kruskal()
 ```
+
+
 
 
 
 ## 최단 경로
 
 -   간선의 가중치가 있는 그래프에서 두 정점 사이의 경로들 중 간선의 가중치의 합이 최소인 경로
+
 -   하나의 시작 정점에서 다른 정점까지의 최단경로
     -   **다익스트라(Dijkstra) 알고리즘**
         -   음의 가중치가 있는 경우 불가능
     -   **벨만-포드(Bellman-Ford) 알고리즘**
         -   음의 가중치가 있는 경우도 가능
+    
 -   모든 정점 쌍에 대한 최단 경로
     -   **플로이드-워셜(Floyd-Warshall) 알고리즘**
+    
+        ```python
+        def floyd():
+            for m in range(1, n+1):
+                for s in range(1, n+1):
+                    for e in range(1, n+1):
+                        if dist[s][e] > dist[s][m] + dist[m][e]:
+                            dist[s][e] = dist[s][m] + dist[m][e]
+        
+                
+        dist = [[float('inf')] * (n+1) for _ in range(n+1)]
+        
+        for i in range(1, n+1):
+            dist[i][i] = 0
+        
+        floyd()
+        ```
+
+
+
+
 
 ### Dijkstra Algorithm
 
@@ -102,23 +158,28 @@ MST-KRUSKAL(Graph, w)
 
 #### Implementation
 
-```pseudocode
-"""
-s: 시작 정점, A: 인접 행렬, D: 거리
-V: 정점 집합, U: 방문한 정점 집합
-"""
-Dijkstra(s, A, D)
-	U = {s}
-	
-	FOR all vertex v
-		D[v] = A[start][v]
-		
-	WHILE U != V
-		FOR w with Minimum D[w]
-		U = U | {w}
-		
-		FOR all adj v with w
-			D[v] = min(D[v], D[w] + A[w][v])
+```python
+from heapq import *
+
+def dijkstra(s):
+    dist = [float('inf')] * n
+    heap = []
+    dist[s] = 0
+    heappush(heap, (dist[s], s))
+
+    while heap:
+        dst, now = heappop(heap)
+
+        if dist[now] < dst:
+            continue
+
+        for nxt, weight in graph[now]:
+            shortest = dist[now] + weight
+            if shortest < dist[nxt]:
+                dist[nxt] = shortest
+                heappush(heap, (dist[nxt], heap))
+
+    return dist
 ```
 
 
