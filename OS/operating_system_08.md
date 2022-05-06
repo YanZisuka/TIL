@@ -7,6 +7,8 @@
 
 
 
+
+
 ### Logical address (=Virtual address)
 
 -   프로세스마다 독립적으로 가지는 주소 공간
@@ -15,9 +17,13 @@
 
 
 
+
+
 ### Physical address
 
 -   메모리에 실제 올라가는 위치
+
+
 
 
 
@@ -31,10 +37,14 @@
 
 
 
+
+
 ### Load time binding
 
 -   Loader의 책임하에 물리적 메모리 주소 부여
 -   컴파일러가 **재배치가능 코드(relocatable code)를** 생성한 경우 가능
+
+
 
 
 
@@ -47,6 +57,8 @@
 
 
 
+
+
 ### Memory-Management Unit (MMU)
 
 -   logical address를 physical address로 매핑해주는 Hardware device
@@ -55,6 +67,10 @@
 -   User program
     -   logical address만을 다룬다.
     -   실제 physical address를 볼 수 없으며, 알 필요가 없다.
+
+
+
+
 
 ## Dynamic Relocation
 
@@ -69,6 +85,8 @@
 
 
 
+
+
 ## Dynamic Loading
 
 -   프로세스 전체를 메모리에 미리 다 올리는 것이 아니라 해당 루틴이 불려질 때 로드하는 것
@@ -80,6 +98,8 @@
 
 
 
+
+
 ## Overlays
 
 -   메모리에 프로세스의 부분 중 실제 필요한 정보만을 올림
@@ -88,6 +108,8 @@
 -   작은 공간의 메모리를 사용하던 초창기 시스템에서 수작업으로 프로그래머가 구현
     -   "Manual Overlay"
     -   프로그래밍이 매우 복잡
+
+
 
 
 
@@ -108,6 +130,8 @@
 
 
 
+
+
 ## Dynamic Linking
 
 -   Linking을 실행시간(execution time)까지 미루는 기법
@@ -120,6 +144,8 @@
     -   라이브러리 호출 부분에 라이브러리 루틴의 위치를 찾기 위한 stub이라는 작은 코드를 둠
     -   라이브러리가 이미 메모리에 있으면 그 루틴의 주소로 가고 없으면 디스크에서 읽어옴
     -   운영체제의 도움이 필요
+
+
 
 
 
@@ -140,6 +166,8 @@
         -   Paging
         -   Segmentation
         -   Paged Segmentation
+
+
 
 
 
@@ -178,6 +206,8 @@
     -   최소한의 메모리 이동으로 compaction하는 방법 (매우 복잡한 문제)
     -   Compaction은 프로세스의 주소가 실행 시간에 동적으로 재배치 가능한 경우에만 수행될 수 있다.
 
+
+
 #### Fixed partition allocation
 
 -   External fragmentation
@@ -185,9 +215,13 @@
 -   Internal fragmentation
     -   분할된 곳에 프로그램이 들어가고 남은 잉여 공간
 
+
+
 #### Variable partition allocation
 
 ![image-20220501111258181](operating_system_08.assets/image-20220501111258181.png)
+
+
 
 
 
@@ -197,7 +231,13 @@
 -   Virtual memory의 내용이 page 단위로 *noncontiguous* 하게 저장됨
 -   일부는 backing storage에, 일부는 physical memory에 저장
 
+
+
 #### Basic Method
+
+![image-20220504231724305](operating_system_08.assets/image-20220504231724305.png)
+
+![image-20220504231622176](operating_system_08.assets/image-20220504231622176.png)
 
 -   physical memory를 동일한 크기의 `frame`으로 나눔
 -   logical memory를 동일 크기의 `page`로 나눔 (frame과 같은 크기)
@@ -208,6 +248,91 @@
 
 
 
+#### Implementation of Page Table
+
+-   Page table은 register에 저장하기에는 너무 크다
+
+-   Page table은 *main memory에* 상주
+
+-   **Page-table base register (PTBR)가** page table을 가리킴 (base register에 대응됨)
+
+-   **Page-table length register (PTLR)가** 테이블 크기를 보관 (limit register에 대응됨)
+
+-   모든 메모리 접근 연산에는 *2번의 memory access* 필요
+
+    -   *page table* 접근, 실제 *data/instruction* 접근
+
+-   속도 향상을 위해 *associative register* 혹은 *translation look-aside buffer **(TLB)*** 라고 불리는 고속의 lookup hardware cache 사용
+
+-   Page table은 프로세스마다 존재
+
+    ![image-20220504232738608](operating_system_08.assets/image-20220504232738608.png)
+
+>   Associative Register
+
+-   **Associative registers** (TLB): parallel search가 가능
+    -   *TLB에는 page table 중 일부만 존재*
+-   Address translation
+    -   page table 중 일부가 associative register에 보관되어 있음
+    -   만약 해당 page #가 associative register에 있는 경우 곧바로 frame #를 얻음
+    -   그렇지 않은 경우 main memory에 있는 page table로부터 frame #를 얻음
+    -   TLB는 context switch 때 flush (remove old entries)
+
+
+
+>   Effective Access Time
+
+-   Associative register lookup time = epsilon
+
+-   memory cycle time = 1
+
+-   **Hit ratio** = alpha
+    -   associative register에서 찾아지는 비율
+    
+-   Effective Access Time (EAT)
+
+    ![image-20220504234018295](operating_system_08.assets/image-20220504234018295.png)
+
+
+
+#### Two-Level Page Table
+
+![image-20220504234614616](operating_system_08.assets/image-20220504234614616.png)
+
+-   현대의 컴퓨터는 address space가 매우 큰 프로그램 지원
+    -   32-bit address 사용시: 2^(32)B (4GB)의 주소 공간
+        -   page size가 4KB일 때 1M개의 page table entry 필요
+        -   각 page entry가 4B일 때 프로세스당 4M의 page table 필요
+        -   그러나, 대부분의 프로그램은 4GB의 주소 공간 중 지극히 일부분만 사용하므로 page table 공간이 심하게 낭비됨
+-   page table 자체를 page로 구성
+-   **사용되지 않는 주소 공간에 대한 outer page table의 엔트리 값은 NULL**
+
+
+
+>   Two-Level Paging Example
+
+-   logical address (on 32-bit machine with *4K page* size)의 구성
+
+    -   *20-bit*의 *page number*
+    -   *12-bit*의 *page offset*
+
+-   page table 자체가 page로 구성되기 때문에 page number는 다음과 같이 나뉜다. (각 page table entry가 4B)
+
+    -   *10-bit*의 *page number*
+    -   *10-bit*의 *page offset*
+
+-   따라서, logical address는 다음과 같다.
+
+    ![image-20220505000122976](operating_system_08.assets/image-20220505000122976.png)
+
+    -   P1은 outer page table의 index
+    -   P2는 outer page table의 page에서의 변위 (displacement)
+
+-   2단계 페이징에서의 Address-translation scheme
+
+    ![image-20220505000231277](operating_system_08.assets/image-20220505000231277.png)
+
+-   
 
 
 
