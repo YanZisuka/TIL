@@ -52,6 +52,67 @@
 
 ![image-20220511092441871](vuejs_03.assets/image-20220511092441871.png)
 
+```javascript
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+import _ from 'lodash'
+import axios from 'axios'
+
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
+const API_URL = 'https://www.googleapis.com/youtube/v3/search'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+    query: '',
+    videos: [],
+    selectedVideo: {},
+  },
+  getters: {
+    isVideos: state => !!state.videos.length,
+    isSelectedVideo: state => !_.isEmpty(state.selectedVideo),
+    videoSrc: state => {
+      const videoId = state.selectedVideo.id?.videoId
+      return `https://www.youtube.com/embed/${videoId}`
+    },
+  },
+  mutations: {
+    SET_QUREY: (state, query) => state.query = query,
+    SET_VIDEOS: (state, videos) => state.videos = videos,
+    SET_SELECTED_VIDEO: (state, video) => state.selectedVideo = video,
+  },
+  actions: {
+    setQuery({ commit, dispatch }, query) {
+      commit('SET_QUREY', query)
+      dispatch('fetchVideos')
+    },
+    fetchVideos({ state, commit }) {
+      const params = {
+        key: API_KEY,
+        part: 'snippet',
+        type: 'video',
+        q: state.query,
+      }
+
+      axios.get(API_URL, { params })
+        .then(res => commit('SET_VIDEOS', res.data.items))
+        .catch(err => console.error(err))
+
+      },
+    setSelectedVideo({ commit }, video) {
+      commit('SET_SELECTED_VIDEO', video)
+    },
+  },
+  modules: {
+  }
+})
+
+```
+
+
+
 >   State
 
 -   "중앙에서 관리하는 모든 상태 정보 (data)"
@@ -126,5 +187,81 @@ $ vue create [app_name]
 
 ```
 $ vue add vuex
+```
+
+
+
+## Component Binding Helper
+
+-   `mapState`
+
+    -   computed와 Store의 state를 매핑
+
+    -   Vuex Store의 하위 구조를 반환하여 component 옵션을 생성함
+
+    -   매핑된 computed 이름이 state 이름과 같을 때 문자열 배열을 전달할 수 있음
+
+    -   하지만 다른 computed 값을 함께 사용할 수 없기 때문에 최종 객체를 computed에 전달할 수 있도록 다음과 같이 Object Spread Operator로 객체를 복사하여 작성
+
+        ```javascript
+        computed: {
+            ...mapState([
+                'todos'
+            ])
+        }
+        ```
+
+    -   `mapState()`는 객체를 반환함
+
+-   `mapGetters`
+
+    -   computed와 Getters를 매핑
+    -   getters를 Object Spread Operator로 계산하여 추가
+    -   해당 컴포넌트 내에서 매핑하고자 하는 이름이 `index.js`에 정의한 getters의 이름과 동일하면 배열의 형태로 해당 이름만 문자열로 추가
+
+-   `mapActions`
+
+    -   actions를 Object Spread Operator로 전개하여 추가
+
+    -   [주의] mapActions를 사용하면, 이전에 `dispatch()`를 사용했을 때 payload로 넘겨줬던 `this.todo`를 pass prop으로 변경해서 전달해야 함
+
+        ```html
+        <template>
+          <div>
+            <span
+              @click="updateSomething(some)"
+            ></span>
+          </div>
+        </template>
+        ```
+
+        
+
+-   `mapMutations`
+
+
+
+## Local Storage
+
+>   vuex-persistedstate
+
+-   Vuex state를 자동으로 브라우저의 Local Storage에 저장해주는 라이브러리 중 하나
+-   페이지가 새로고침 되어도 Vuex state를 유지시킴
+
+```
+$ npm i vuex-persistedstate
+```
+
+```javascript
+// index.js
+
+import createPersistedState from 'vuex-persistedstate'
+
+export default new Vuex.Store({
+    plugins: [
+        createPersistedState(),
+    ],
+    ...
+})
 ```
 
