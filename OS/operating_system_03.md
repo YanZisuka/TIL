@@ -5,6 +5,8 @@
 -   컴퓨터의 state는 `memory + register`
 -   **The state of a process that the kernel needs to restart a preempted process를** 가리켜 `context`라고 함
 
+<br><br>
+
 ### Process Control Block
 
 ![image-20220319023717527](operating_system_03.assets/image-20220319023717527.png)
@@ -25,7 +27,7 @@
 -   **Resource Ownership and Utilization**
     -   Printer를 두 Process가 동시에 사용한다면 프로그램의 결과가 논리적으로 전개되지 않고 뒤섞이는 결과가 초래될 수 있으므로 이를 관리해야 한다.
 
-
+<br><br>
 
 ### Process Status Word (PSW)
 
@@ -33,7 +35,7 @@
 -   Contains condition codes and other status information of the currently running process
 -   Example: EEFLAGS register on Intel x86 processors
 
-
+<br><br>
 
 ### Two-State Process Model
 
@@ -43,16 +45,21 @@
 
 ![image-20220319025202061](operating_system_03.assets/image-20220319025202061.png)
 
-
+<br><br>
 
 ### Process Creation and Termination
 
 -   Process spawning
     -   OS may create a process at the explicit request of another process
         -   A new process becomes a *child process* of the *parent process*
+
+<br>
+
 -   Process termination
     -   A process may terminate itself by calling a system call called **EXIT**
     -   A process may terminate due to an erroneous condition such as memory unavailable, arithmetic error(*ZeroDivisionError* or *Overflow* or *Underflow*), or parent process termination, etc.
+
+<br>
 
 #### Creating new processes
 
@@ -60,6 +67,8 @@
 
     -   Unix provides a number of system calls for manipulating processes
     -   Obtain Process ID, Create/Terminate Process, etc.
+
+<br>
 
 -   *`int fork(void)`*
 
@@ -76,8 +85,9 @@
     }
     ```
 
--   **Fork Example #1**
+<br>
 
+-   **Fork Example #1**
     -   Parent and child both run the same code
         -   Distinguish parent from child by return value from `fork`
     -   Duplicate but separate address space
@@ -98,6 +108,8 @@ void fork1() {
     printf("Bye from process %d with x = %d\n", getpid(), x);
 }
 ```
+
+<br>
 
 -   **Fork Example #2**
     -   Both parent and child can continue forking
@@ -122,6 +134,8 @@ void fork2() {
 -   `wait()`
     -   sleep until child is done
 
+<br>
+
 #### Destroying Process
 
 -   *`void exit(int status)`*
@@ -141,23 +155,31 @@ void fork6() {
 }
 ```
 
-
+<br><br>
 
 ### Five-State Process Model
 
 ![image-20220319032605067](operating_system_03.assets/image-20220319032605067.png)
 
+<br>
+
 #### Example
 
 ![image-20220319033532162](operating_system_03.assets/image-20220319033532162.png)
+
+<br>
 
 #### Using Two Queues
 
 ![image-20220319033606088](operating_system_03.assets/image-20220319033606088.png)
 
+<br>
+
 #### Multiple Blocked Queues
 
 ![image-20220319033638918](operating_system_03.assets/image-20220319033638918.png)
+
+<br><br>
 
 ### Suspended Processes
 
@@ -169,13 +191,13 @@ void fork6() {
 -   **Suspended Process**
     -   The process is swapped out and is not immediately available for execution
 
-
+<br><br>
 
 ### Suspend State
 
 ![image-20220319034244246](operating_system_03.assets/image-20220319034244246.png)
 
-
+<br><br>
 
 ### Two Suspend States
 
@@ -183,18 +205,17 @@ void fork6() {
 
 ![image-20220319034318553](operating_system_03.assets/image-20220319034318553.png)
 
-
+<br><br>
 
 ### Processes and Resources
 
 ![image-20220319034834629](operating_system_03.assets/image-20220319034834629.png)
 
-
+<br><br>
 
 ### Interrupt/Exception
 
 -   둘의 메커니즘은 거의 같지만, 발생 원인은 다르다.
-
 -   Interrupts
     -   Forced transfer of control to a procedure (*handler*) due to external events (*interrupt*) or due to an internal erroneous condition during program execution (*exception*)
     -   **Exception**
@@ -202,11 +223,14 @@ void fork6() {
         -   Synchronous (프로세스를 동일한 환경에서 실행하면 exception도 동일하게 발생한다), internal (CPU 내부에서 실행중인 프로세스)
     -   **Interrupt**
         -   Asynchronous, external events
+
+<br>
+
 -   Interrupt handling mechanism
     -   Should allow interrupts/exceptions to be handled transparently to the executing process (application programs and operating system)
     -   Procedure
 
-
+<br><br>
 
 ### Exceptions
 
@@ -215,17 +239,23 @@ void fork6() {
     -   Intentional exceptions
     -   Examples: system calls (OS의 code를 불러오는 것), breakpoints (debug)
     -   Returns control to "*next*" instruction
+
+<br>
+
 -   **Faults**
     -   Unintentional but possibly recoverable
     -   Examples: page faults (recoverable), protection faults (unrecoverable), arithmetic exception.
     -   Either re-executes faulting ("*current*") instruction or terminate the process
+
+<br>
+
 -   **Aborts**
     -   Unintentional and *unrecoverable fatal* errors
     -   Examples: parity error, machine check abort.
     -   Aborts the current process, and probably the entire system
     -   Intel에서는 MCA(Machine Check Abort)라고 칭한다.
 
-
+<br><br>
 
 ### Interrupts
 
@@ -233,6 +263,8 @@ void fork6() {
 
     -   Indicated by setting the processor's interrupt pins (#INT, #NMI)
     -   Handler returns to "*next*" instruction.
+
+<br>
 
 -   **Interrupt Classification**
 
@@ -244,6 +276,8 @@ void fork6() {
         -   Cannot be disabled by program
         -   Received on the processor's NMI pin
 
+<br>
+
 -   Examples:
 
     -   I/O interrupts
@@ -253,6 +287,8 @@ void fork6() {
 
     ![image-20220320134449077](operating_system_03.assets/image-20220320134449077.png)
 
+<br>
+
 -   Forced transfer of control to a procedure (*handler*) due to external events (*interrupt*) or due to an erroneous condition (*exception*)
 -   **Interrupt handling mechanism**
     -   Should allow interrupts/exceptions to be handled transparently to the executing process (application programs and operating system)
@@ -260,7 +296,7 @@ void fork6() {
         -   When an interrupt is received or an exception condition is detected, the current task is suspended (paused) and the control automatically transfers to a handler (event code를 통해 처리한다.)
         -   After the handler is complete, the interrupted task resumes without loss of continuity, unless recovery is not possible or the interrupt causes the currently running task to be terminated. (*ex. arithmetic exception*, read를 해야하는데 write를 한다든지 하는 protection 상황)
 
-
+<br><br>
 
 ### UNIX System V Process Management
 
@@ -272,8 +308,14 @@ void fork6() {
         -   Run in user mode to execute user programs
         -   Enter kernel mode by issuing a system call, by an exception or by an interrupt
 
-
+<br><br>
 
 ### UNIX Process States
 
 ![image-20220320135354622](operating_system_03.assets/image-20220320135354622.png)
+
+<br><br>
+
+## Reference
+
+[운영체제: 최린 교수님](https://youtu.be/_NQrpp00OqY)
