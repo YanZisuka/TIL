@@ -9,7 +9,9 @@
 -   Data centers for scaling
 -   Server process: process that waits to be contacted
 
-### Clients
+<br>
+
+### Client
 
 -   Communicate with server
 -   May be intermittently(간헐적으로) connected
@@ -17,7 +19,7 @@
 -   Do not communicate directly with each other
 -   Client process: process that initiates communication
 
-
+<br><br>
 
 ## Processes communicating
 
@@ -26,6 +28,8 @@
 -   Program running within a host
     -   within same host, two processes communicate using **inter-process communication** (defined by OS)
     -   processes in different hosts communicate by exchanging **messages**
+
+<br>
 
 ### Addressing processes
 
@@ -36,7 +40,7 @@
     -   HTTP server: 80
     -   mail server: 25
 
-
+<br><br>
 
 ## Internet Transport Protocols Services
 
@@ -48,7 +52,7 @@
 -   **does not provide**: timing, minimum throughput guarantee, security
 -   **connection-oriented**: setup required between client and server processes
 
-
+<br>
 
 ### UDP service:
 
@@ -64,7 +68,7 @@
 |  Streaming multimedia  | HTTP (e.g. YouTube), RTP [RFC 1889] |          TCP or UDP           |
 |   Internet telephony   | SIP, RTP, proprietary (e.g. Skype)  |          TCP or UDP           |
 
-
+<br><br>
 
 ## Chapter 2. Application Layer
 
@@ -74,7 +78,7 @@
 -   IP address를 통해 machine을 지정하고, 이 안의 수많은 process의 socket을 port 번호를 이용해 특정한다.
 -   Web browser가 DNS를 통해 `www.naver.com`의 IP 주소를 얻게되고, **80번 port에** 접근한다.
 
-
+<br><br>
 
 ### Web and HTTP
 
@@ -82,6 +86,8 @@
 -   Object can be HTML file, JPEG file, Java applet, audio file...
 -   Web page consists of **base HTML-file** which includes **several referenced objects**
 -   Each object is addressable by a **URL**, e.g., `www.someschool.edu[host name]/someDept/pic.gif[path name]`
+
+<br><br>
 
 #### HTTP: hypertext transfer protocol
 
@@ -91,16 +97,22 @@
 ![image-20220326201706803](network_02.assets/image-20220326201706803.png)
 
 -   HTTP는 TCP를 기반으로 동작 (유실되지 않는다.)
+
+<br>
+
 -   **uses TCP**:
     -   client initiates TCP connection (creates socket) to server, port 80
     -   server accepts TCP connection from client
     -   HTTP massages exchanged between browser (HTTP client) and Web server (HTTP server)
     -   TCP connection closed
+
+<br>
+
 -   **HTTP is "stateless"**
     -   server maintains no information about past client requests
     -   단순하기에 서버가 많은 사용자들을 처리할 수 있음
 
-
+<br><br>
 
 ### HTTP connections
 
@@ -123,7 +135,7 @@
 
 -   TCP 연결 재사용
 
-
+<br><br>
 
 ### HTTP request message
 
@@ -136,6 +148,8 @@ User-Agent: Firefox/3.6.10\r\n
 ...
 ```
 
+<br><br>
+
 ### HTTP response message
 
 ```
@@ -143,13 +157,13 @@ HTTP/1.1 200 OK\r\n
 ...
 ```
 
-
+<br><br>
 
 ### User-server state: cookies
 
 ![image-20220326205158371](network_02.assets/image-20220326205158371.png)
 
-
+<br><br>
 
 ### Web caches (proxy server)
 
@@ -161,6 +175,8 @@ HTTP/1.1 200 OK\r\n
 
 ![image-20220326205859745](network_02.assets/image-20220326205859745.png)
 
+<br>
+
 #### Caching example:
 
 -   케이블 확장공사를 하는 것이 하나의 해결책이지만 비용이 매우 비싸다.
@@ -168,7 +184,7 @@ HTTP/1.1 200 OK\r\n
 
 ![image-20220329004249003](network_02.assets/image-20220329004249003.png)
 
-
+<br>
 
 #### Conditional GET
 
@@ -180,26 +196,36 @@ HTTP/1.1 200 OK\r\n
 -   Cache: specify date of cached copy in HTTP request `If-modified-since: <date>`
 -   Server: response contains no object if cached copy is up-to-date: `HTTP/1.0 304 Not Modified`
 
-
+<br><br>
 
 ### DNS: Domain Name System
 
 -   people: many identifiers:
     -   SSN, name, passport #
+
+<br>
+
 -   Internet hosts, routers:
     -   IP address (32 bit) - used for addressing datagrams
     -   "name", e.g., `www.yahoo.com` - used by humans
     -   Q: how to map between IP address and name, and vice versa?
+
+<br>
+
 -   DNS:
     -   distributed database
         -   implemented in hierarchy of many **name servers**
     -   application-layer protocol:
         -   hosts, name servers communicate to resolve names (address/name translation)
 
+<br>
+
 -   Host name과 IP address를 mapping한 database를 한 서버에서 관리하면 single point failure (그 서버가 다운되면 이용 불가능)이 발생할 수 있다.
 -   DNS는 UDP를 사용한다.
     -   UDP는 TCP와 다르게 준비절차가 없으므로 빠르다. (DNS는 HTTP 요청의 준비과정일 뿐이므로 빠른 것이 유리함)
     -   HTTP와 다르게 전송하는 데이터 크기가 매우 작으므로 유실의 위험이 적다.
+
+<br>
 
 #### DNS: a distributed, hierarchical database
 
@@ -210,6 +236,8 @@ HTTP/1.1 200 OK\r\n
     -   client queries `com DNS server` to get `amazon.com DNS server`
     -   client queries `amazon.com DNS server` to get IP address for `www.amazon.com`
 
+<br>
+
 #### DNS: root name servers
 
 -   contacted by local name server that can not resolve name
@@ -219,16 +247,23 @@ HTTP/1.1 200 OK\r\n
     -   returns mapping to local name server
     -   13 root name "servers" worldwide
 
+<br>
+
 #### TLD, authoritative servers
 
 -   top-level domain (TLD) servers:
     -   responsible for com, org, net, edu, aero, jobs, museums, and all top-level country domains, e.g. uk, fr, ca, jp
     -   Network Solutions maintains servers for .com TLD
     -   Educause for .edu TLD
+
+<br>
+
 -   authoritative DNS servers:
     -   organization's own DNS server(s), providing authoritative hostname to IP mappings for organization's named hosts
     -   can be maintained by organization or service provider
     -   `www`, `portal`, `info`, etc,.
+
+<br>
 
 #### Local DNS name server
 
@@ -239,19 +274,31 @@ HTTP/1.1 200 OK\r\n
     -   has local cache of recent name-to-address translation pairs (but may be out of date!)
     -   acts as proxy, forwards query into hierarchy
 
+<br>
+
 #### DNS name resolution example
 
 ![image-20220329013327927](network_02.assets/image-20220329013327927.png)
+
+<br>
 
 #### DNS:caching, updating records
 
 -   once (any) name server learns mapping, it *caches* mapping
     -   cache entries timeout (disappear) after some time (TTL)
     -   TLD servers typically cached in local name servers
+
+<br>
+
 -   cached entries may be **out-of-date** (best effort name-to-address translation!)
     -   if name host changes IP address, may not be known Internet-wide until all TTLs expire
+
+<br>
+
 -   update/notify mechanisms proposed IETF standard
     -   RFC 2136
+
+<br>
 
 #### DNS records
 
@@ -266,10 +313,14 @@ HTTP/1.1 200 OK\r\n
     -   `name` is hostname
     -   `value` is IP address
 
+<br>
+
 -   **type=NS**
 
     -   `name` is domain (e.g., foo.com)
     -   `value` is hostname of authoritative name server for this domain
+
+<br>
 
 -   type=CNAME
 
@@ -277,11 +328,13 @@ HTTP/1.1 200 OK\r\n
     -   `www.bim.com` is really `servereast.backup2.ibm.com`
     -   `value` is canonical name
 
+<br>
+
 -   type=MX
 
     -   `value` is name of mailserver associated with `name`
 
-
+<br><br>
 
 ### What is a socket?
 
@@ -292,10 +345,14 @@ HTTP/1.1 200 OK\r\n
     -   reliable vs. best effort
     -   connection-oriented vs. connectionless
 
+<br>
+
 #### Once configured, the application can
 
 -   pass data to the socket for network tranmission
 -   receive data from the socket (transmitted through the network by some other host)
+
+<br>
 
 #### Two essential types of sockets
 
@@ -305,12 +362,17 @@ HTTP/1.1 200 OK\r\n
     -   in-order guaranteed
     -   connection-oriented
     -   bidirectional
+
+<br>
+
 -   **SOCK_DGRAM**
     -   a.k.a UDP
     -   unreliable delivery
     -   no order guarantees
     -   no notion of "connection" - app indicates dest. for each packet
     -   can send or receive
+
+<br>
 
 #### Sockets API
 
@@ -319,38 +381,86 @@ HTTP/1.1 200 OK\r\n
 -   Sending and Receiving Data
 -   Tearing Down a Connection (TCP)
 
-#### TCPClient.py
-
-```python
-from socket import *
-
-serverName = 'servername'
-serverPort = 12000
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))  # connect(sockfd, servaddr, addrlen)
-sentence = raw_input('Input lowercase sentence:')
-clientSocket.send(sentence.encode())
-modifiedSentence = clientSocket.recv(1024)
-print('From Server: ', modifiedSentence.decode())
-clientSocket.close()
-```
+<br>
 
 #### TCPServer.py
 
 ```python
 from socket import *
+import threading
+import time
 
-serverPort = 12000
-serverSocket = socket(AF_INET, SOCK_STREAM)  # socket(domain, type)
-serverSocket.bind(('', serverPort))  # bind(sockfd, myaddr, addrlen)
-serverSocket.listen(1)  # listen(sockfd, backlog)
-print('The server if ready to receive')
+
+def send(sock):
+    while True:
+        sendData = input('>>> ')
+        sock.send(sendData.encode('utf-8'))
+
+
+def receive(sock):
+    while True:
+        recvData = sock.recv(1024)
+        print('Opponent:', recvData.decode('utf-8'))
+
+
+port = 8081
+
+serverSock = socket(AF_INET, SOCK_STREAM)
+serverSock.bind(('', port))
+serverSock.listen(1)
+
+connectionSock, addr = serverSock.accept()
+print('Successfully connected from', str(addr) + '.')
+
+sender = threading.Thread(target=send, args=(connectionSock,))
+receiver = threading.Thread(target=receive, args=(connectionSock,))
+    
+sender.start()
+receiver.start()
 
 while True:
-    connectionSocket, addr = serverSocket.accept()  # accept(sockfd, cliaddr, addrlen)
-    sentence = connectionSocket.recv(1024).decode()
-    capitalizedSentence = sentence.upper()
-    connectionSocket.send(capitalizedSentence.encode())
-    connectionSocket.close()
+    time.sleep(1)
+    pass
+
+```
+
+<br>
+
+#### TCPClient.py
+
+```python
+from socket import *
+import threading
+import time
+
+
+def send(sock):
+    while True:
+        sendData = input('>>> ')
+        sock.send(sendData.encode('utf-8'))
+
+
+def receive(sock):
+    while True:
+        recvData = sock.recv(1024)
+        print('Opponent:', recvData.decode('utf-8'))
+
+
+port = 8081
+
+clientSock = socket(AF_INET, SOCK_STREAM)
+clientSock.connect(('127.0.0.1', port))
+print('Successfully connected.')
+
+sender = threading.Thread(target=send, args=(clientSock,))
+receiver = threading.Thread(target=receive, args=(clientSock,))
+    
+sender.start()
+receiver.start()
+
+while True:
+    time.sleep(1)
+    pass
+
 ```
 
