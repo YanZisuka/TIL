@@ -464,3 +464,8 @@ while True:
 
 ```
 
+<br><br>
+
+## Reference
+
+[컴퓨터네트워크: 이석복 교수님](http://www.kocw.net/home/cview.do?cid=6b984f376cfb8f70)
