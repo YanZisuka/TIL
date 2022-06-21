@@ -6,6 +6,8 @@
 
 ![image-20220330010856249](operating_system_05.assets/image-20220330010856249.png)
 
+<br><br>
+
 ### CPU-burst Time의 분포
 
 ![image-20220330010917914](operating_system_05.assets/image-20220330010917914.png)
@@ -13,6 +15,8 @@
 -   여러 종류의 job(=process)이 섞여 있기 때문에 CPU 스케줄링이 필요하다.
 -   Interactive job에게 적절한 response 제공 요망
 -   CPU와 I/O 장치 등 시스템 자원을 골고루 효율적으로 사용
+
+<br><br>
 
 ### 프로세스의 특성
 
@@ -24,16 +28,19 @@
         -   계산 위주의 job
         -   few very long CPU bursts
 
+<br><br>
+
 ### CPU Scheduler & Dispatcher
 
 -   CPU Scheduler
 
     -   Ready 상태의 프로세스 중에서 이번에 CPU를 줄 프로세스를 고른다.
-
 -   Dispatcher
 
     -   CPU의 제어권을 CPU scheduler에 의해 선택된 프로세스에게 넘긴다.
     -   이 과정을 context switching(문맥 교환)이라고 한다.
+
+<br>
 
 -   CPU 스케줄링이 필요한 경우는 프로세스에게 다음과 같은 상태 변화가 있는 경우이다.
 
@@ -44,6 +51,8 @@
 
     -   i, iv의 스케줄링은 **nonpreemptive (=자진반납)**
     -   All other scheduling is **preemptive**
+
+<br><br>
 
 ### Scheduling Criteria
 
@@ -67,7 +76,7 @@
 
 -   amount of time it takes *from when a request was submitted until the first response is produced*, **not** output (for time-sharing environment)
 
-
+<br><br>
 
 ### Scheduling Algorithms
 
@@ -77,29 +86,39 @@
 
 
 
+<br>
+
 #### SJF (Shortest-Job-First)
 
 -   각 프로세스의 다음번 CPU burst time을 가지고 스케줄링에 활용
 
 -   CPU burst time이 가장 짧은 프로세스를 제일 먼저 스케줄링
 
--   Two schemes:
-    -   Nonpreemptive
+-   **Two schemes:**
+    
+    -   **Nonpreemptive**
+        
         -   일단 CPU를 점유하면 이번 CPU burst가 완료될 때까지 CPU를 선점당하지 않음
         
             ![image-20220330085518997](operating_system_05.assets/image-20220330085518997.png)
-        
-    -   Preemptive
-        -   현재 수행중인 프로세스의 남은 burst time보다 더 짧은 CPU burst time을 가지는 새로운 프로세스가 도착하면 CPU를 빼앗김
-        
-        -   이 방법을 Shortest-Remaining-Time-First (SRTF)라고도 부른다.
-        
-            ![image-20220330085552571](operating_system_05.assets/image-20220330085552571.png)
     
+    <br>
+    
+    -   **Preemptive**
+    
+        -   현재 수행중인 프로세스의 남은 burst time보다 더 짧은 CPU burst time을 가지는 새로운 프로세스가 도착하면 CPU를 빼앗김
+    
+        -   이 방법을 Shortest-Remaining-Time-First (SRTF)라고도 부른다.
+    
+            ![image-20220330085552571](operating_system_05.assets/image-20220330085552571.png)
+
+<br>
+
 -   SJF is optimal
     -   주어진 프로세스들에 대해 minimum average waiting time을 보장
-    
 -   Long process가 starvation 문제를 가질 수 있다.
+
+<br>
 
 #### 다음 CPU Burst Time의 예측
 
@@ -109,6 +128,8 @@
 
 ![image-20220330090458494](operating_system_05.assets/image-20220330090458494.png)
 
+<br>
+
 #### Priority Scheduling
 
 -   A priority number (integer) is associated with each process
@@ -116,12 +137,17 @@
     -   (smallest integer = highest priority)
         -   Preemptive
         -   Nonpreemptive
+
+<br>
+
 -   SJF는 일종의 priority scheduling이다.
     -   priority = predicted next CPU burst time
 -   Problem
     -   Starvation: low priority processes **may never execute**
 -   Solution
     -   Aging: as time progresses increase the priority of the process
+
+<br>
 
 #### Round Robin (RR)
 
@@ -135,7 +161,7 @@
     -   q small -> context switch 오버헤드가 커진다.
 -   일반적으로 SJF보다 average turnaround time이 길지만 **response time은 더 짧다.**
 
-
+<br><br>
 
 ### Multilevel Queue
 
@@ -145,9 +171,15 @@
 -   Ready queue를 여러 개로 분할
     -   foreground (interactive)
     -   background (batch - no human interaction)
+
+<br>
+
 -   각 큐는 독립적인 스케줄링 알고리즘을 가진다.
     -   foreground - RR
     -   background - FCFS
+
+<br>
+
 -   큐에 대한 스케줄링이 필요
     -   Fixed priority scheduling
         -   serve **all from foreground then** from background
@@ -156,7 +188,7 @@
         -   각 큐에 CPU time을 적절한 비율로 할당
         -   e.g., 80% to foreground in RR, 20% to background in FCFS
 
-
+<br><br>
 
 ### Multilevel Feedback Queue
 
@@ -171,7 +203,7 @@
     -   Process를 하위 큐로 내쫓는 기준
     -   프로세스가 CPU 서비스를 받으려 할 때 들어갈 큐를 결정하는 기준
 
-
+<br><br>
 
 ### Multiple-Processor Scheduling
 
@@ -195,7 +227,7 @@
 
 -   하나의 프로세서가 시스템 데이터의 접근과 공유를 책임지고 나머지 프로세서는 거기에 따름
 
-
+<br><br>
 
 ### Real-Time Scheduling
 
@@ -207,7 +239,7 @@
 
 -   Soft real-time task는 일반 프로세스에 비해 높은 priority를 갖도록 해야 함
 
-
+<br><br>
 
 ### Thread Scheduling
 
@@ -219,7 +251,7 @@
 
 -   Kernel level thread의 경우 일반 프로세스와 마찬가지로 커널의 단기 스케줄러가 어떤 thread를 스케줄할지 결정
 
-
+<br><br>
 
 ### Algorithm Evaluation
 
@@ -235,3 +267,8 @@
 
 -   알고리즘을 **모의 프로그램으로** 작성 후 **trace를 입력으로** 하여 결과 비교
 
+<br><br>
+
+## Reference
+
+[운영체제: 반효경 교수님](http://www.kocw.net/home/cview.do?cid=3646706b4347ef09)
