@@ -5,9 +5,7 @@
 -   주소 바인딩: 주소를 결정하는 것
     -   Symbolic Address -> Logical Address -> Physical Address
 
-
-
-
+<br>
 
 ### Logical address (=Virtual address)
 
@@ -15,17 +13,13 @@
 -   각 프로세스마다 0번지부터 시작
 -   CPU가 보는 주소
 
-
-
-
+<br>
 
 ### Physical address
 
 -   메모리에 실제 올라가는 위치
 
-
-
-
+<br><br>
 
 ## Address Binding
 
@@ -35,18 +29,14 @@
 -   시작 위치 변경시 재컴파일
 -   컴파일러는 **절대 코드(absolute code)** 생성
 
-
-
-
+<br>
 
 ### Load time binding
 
 -   Loader의 책임하에 물리적 메모리 주소 부여
 -   컴파일러가 **재배치가능 코드(relocatable code)를** 생성한 경우 가능
 
-
-
-
+<br>
 
 ### Execution time binding (=Run time binding)
 
@@ -55,9 +45,7 @@
 -   하드웨어적 지원이 필요
     -   e.g., base and limit registers, MMU
 
-
-
-
+<br>
 
 ### Memory-Management Unit (MMU)
 
@@ -68,9 +56,7 @@
     -   logical address만을 다룬다.
     -   실제 physical address를 볼 수 없으며, 알 필요가 없다.
 
-
-
-
+<br><br>
 
 ## Dynamic Relocation
 
@@ -83,9 +69,7 @@
 -   Limit register
     -   논리적 주소의 범위(=user program이 사용하는 메모리 주소의 범위)
 
-
-
-
+<br><br>
 
 ## Dynamic Loading
 
@@ -96,9 +80,7 @@
     -   e.g., 오류 처리 루틴
 -   운영체제의 특별한 지원 없이 프로그램 자체에서 구현 가능 (OS는 라이브러리를 통해 지원 가능)
 
-
-
-
+<br><br>
 
 ## Overlays
 
@@ -109,25 +91,20 @@
     -   "Manual Overlay"
     -   프로그래밍이 매우 복잡
 
-
-
-
+<br><br>
 
 ## Swapping
 
 -   프로세스를 일시적으로 메모리에서 backing store로 쫓아내는 것
 
-    
-
 -   **Backing store (=swap area)**
-    
     -   디스크
     -   많은 사용자의 프로세스 이미지를 담을 만큼 충분히 빠르고 큰 저장 공간
     
-    
-    
+
+<br>
+
 -   **Swap in / Swap out**
-    
     -   일반적으로 중기 스케줄러(swapper)에 의해 swap out 시킬 프로세스 선정
     -   Priority-based CPU scheduling algorithm
         -   priority가 낮은 프로세스를 swapped out 시킴
@@ -136,15 +113,11 @@
     -   Execution time binding에서는 추후 빈 메모리 영역 아무 곳에나 올릴 수 있음
     -   Swap time은 대부분 transfer time (swap되는 양에 비례하는 시간)임
 
-
-
-
+<br><br>
 
 ## Dynamic Linking
 
 -   Linking을 실행시간(execution time)까지 미루는 기법
-
-    
 
 -   **Static linking**
     
@@ -152,36 +125,29 @@
     -   실행 파일의 크기가 커짐
     -   동일한 라이브러리를 각각의 프로세스가 메모리에 올리므로 메모리 낭비 (e.g., `printf` 함수의 라이브러리 코드)
     
-    
-    
+
+<br>
+
 -   **Dynamic linking**
-    
+
     -   라이브러리가 실행시 연결됨
     -   라이브러리 호출 부분에 라이브러리 루틴의 위치를 찾기 위한 stub이라는 작은 코드를 둠
     -   라이브러리가 이미 메모리에 있으면 그 루틴의 주소로 가고 없으면 디스크에서 읽어옴
     -   운영체제의 도움이 필요
 
-
-
-
+<br><br>
 
 ## Allocation of Physical Memory
 
 -   메모리는 일반적으로 두 영역으로 나뉘어 사용
 
-    
-
 -   **OS 상주 영역**
     
     -   interrupt vector와 함께 낮은 주소 영역
     
-    
-    
 -   **사용자 프로세스 영역**
     
     -   높은 주소 영역
-    
-    
     
 -   사용자 프로세스 영역의 할당 방법
     
@@ -189,15 +155,16 @@
         -   각각의 프로세스가 메모리의 연속적인 공간에 적재되도록 하는 것
         -   Fixed partition allocation
         -   Variable partition allocation
+    
+    <br>
+    
     -   **Noncontiguous allocation**
         -   하나의 프로세스가 메모리의 여러 영역에 분산되어 올라갈 수 있음
         -   Paging
         -   Segmentation
         -   Paged Segmentation
 
-
-
-
+<br>
 
 ### Contiguous Allocation
 
@@ -210,7 +177,8 @@
         -   할당 공간
         -   가용 공간(hole)
 
-    
+
+<br>
 
 -   **Dynamic Storage-Allocation Problem**
 
@@ -228,7 +196,8 @@
         -   상대적으로 아주 큰 hole들이 생성됨
     -   First-fit과 best-fit이 worst-fit보다 속도와 공간 이용률 측면에서 효과적인 것으로 알려짐 (실험적 결과)
 
-    
+
+<br>
 
 -   **Compaction**
 
@@ -238,7 +207,7 @@
     -   최소한의 메모리 이동으로 compaction하는 방법 (매우 복잡한 문제)
     -   Compaction은 프로세스의 주소가 실행 시간에 동적으로 재배치 가능한 경우에만 수행될 수 있다.
 
-
+<br>
 
 #### Fixed partition allocation
 
@@ -247,7 +216,7 @@
 -   Internal fragmentation
     -   분할된 곳에 프로그램이 들어가고 남은 잉여 공간
 
-
+<br>
 
 #### Variable partition allocation
 
@@ -255,7 +224,7 @@
 
 
 
-
+<br>
 
 ### Paging
 
@@ -263,7 +232,7 @@
 -   Virtual memory의 내용이 page 단위로 *noncontiguous* 하게 저장됨
 -   일부는 backing storage에, 일부는 physical memory에 저장
 
-
+<br>
 
 #### Basic Method
 
@@ -278,7 +247,7 @@
 -   External fragmentation 발생 안함
 -   Internal fragmentation 발생 가능
 
-
+<br>
 
 #### Implementation of Page Table
 
@@ -300,12 +269,12 @@
 
     ![image-20220504232738608](operating_system_08.assets/image-20220504232738608.png)
 
+<br>
+
 >   Associative Register
 
 -   **Associative registers** (TLB): parallel search가 가능
     -   *TLB에는 page table 중 일부만 존재*
-    
-    
     
 -   Address translation
     
@@ -314,7 +283,7 @@
     -   그렇지 않은 경우 main memory에 있는 page table로부터 frame #를 얻음
     -   TLB는 context switch 때 flush (remove old entries)
 
-
+<br>
 
 >   Effective Access Time
 
@@ -330,7 +299,7 @@
 
     ![image-20220504234018295](operating_system_08.assets/image-20220504234018295.png)
 
-
+<br>
 
 #### Two-Level Page Table
 
@@ -342,15 +311,14 @@
         -   각 page entry가 4B일 때 프로세스당 4M의 page table 필요
         -   그러나, 대부분의 프로그램은 4GB의 주소 공간 중 지극히 일부분만 사용하므로 page table 공간이 심하게 낭비됨
     
-    
-    
--   page table 자체를 page로 구성
 
-    
+<br>
+
+-   page table 자체를 page로 구성
 
 -   **사용되지 않는 주소 공간에 대한 outer page table의 엔트리 값은 NULL**
 
-
+<br>
 
 >   Two-Level Paging Example
 
@@ -359,14 +327,16 @@
     -   *20-bit*의 *page number*
     -   *12-bit*의 *page offset*
 
-    
+
+<br>
 
 -   page table 자체가 page로 구성되기 때문에 page number는 다음과 같이 나뉜다. (각 page table entry가 4B)
 
     -   *10-bit*의 *page number*
     -   *10-bit*의 *page offset*
 
-    
+
+<br>
 
 -   따라서, logical address는 다음과 같다.
 
@@ -375,13 +345,14 @@
     -   P1은 outer page table의 index
     -   P2는 outer page table의 page에서의 변위 (displacement)
 
-    
+
+<br>
 
 -   2단계 페이징에서의 Address-translation scheme
 
     ![image-20220505000231277](operating_system_08.assets/image-20220505000231277.png)
 
-
+<br>
 
 #### Multilevel Paging and Performance
 
@@ -393,7 +364,7 @@
     -   effective memory access time = 0.98 * 120 + 0.02 * 520 = 128 nanoseconds
     -   결과적으로 주소 변환을 위해 28ns만 소요
 
-
+<br>
 
 #### Valid (v) / Invalid (i) Bit in a Page Table
 
@@ -401,7 +372,7 @@
 
 -   실제 주소를 나타내는 값인지 표시하는 비트
 
-
+<br>
 
 #### Memory Protection
 
@@ -410,16 +381,17 @@
         -   page에 대한 접근 권한 (read/write/read-only)
         -   연산에 대한 권한을 나타내는 비트
         
-        
-        
+    
+    <br>
+    
     -   Valid-invalid bit
-        
+    
         -   "valid"는 해당 주소의 frame에 그 프로세스를 구성하는 유효한 내용이 있음을 뜻함 (접근 허용)
         -   "invalid"는 해당 주소의 frame에 유효한 내용이 없음*을 뜻함 (접근 불허)
             -   *i) 프로세스가 그 주소 부분을 사용하지 않는 경우
             -   *ii) 해당 페이지가 메모리에 올라와 있지 않고 swap area에 있는 경우
 
-
+<br>
 
 #### Inverted Page Table
 
@@ -429,10 +401,11 @@
     -   모든 process 별로 그 logical address에 대응하는 모든 page에 대해 page table entry가 존재
     -   대응하는 page가 메모리에 있든 아니든 page table에는 entry로 존재
     
-    
-    
+
+<br>
+
 -   Inverted page table
-    
+
     -   Page frame 하나당 page table에 하나의 entry를 둔 것 (system-wide)
     -   각 page table entry는 각각의 물리적 메모리의 page frame이 담고 있는 내용 표시 (process-id, process의 logical address)
     -   단점
@@ -441,7 +414,7 @@
         -   associative register 사용 (expensive)
             -   병렬적으로 검색할 수 있게 됨
 
-
+<br>
 
 #### Shared Page
 
@@ -455,14 +428,14 @@
 
     -   Shared code는 **모든 프로세스의 *logical address space* 에서 동일한 위치에 있어야 함**
 
-
+<br>
 
 
 -   **Private code and data**
     -   각 프로세스들은 독자적으로 메모리에 올림
     -   Private data는 logical address space의 아무 곳에 와도 무방함
 
-
+<br>
 
 ### Segmentation
 
@@ -471,7 +444,7 @@
     -   크게는 프로그램 전체를 하나의 세그먼트로 정의 가능
     -   일반적으로는 code, data, stack 부분이 하나씩의 세그먼트로 정의됨
 
-
+<br>
 
 -   Segment는 다음과 같은 *logical unit* 들임
 
@@ -483,36 +456,37 @@
     symbol table, arrays
     ```
 
-
+<br>
 
 #### Segmentation Architecture
 
 -   Logical address는 다음의 두 가지로 구성
     -   segment-number, offset
     
-    
-    
+
+<br>
+
 -   **Segment table**
-    
+
     -   each table entry has:
         -   **base** - *starting physical address* of the segment
         -   **limit** - *length* of the segment
-    
-    
-    
+
+    <br>
+
 -   **Segment-table base register (STBR)**
-    
+
     -   물리적 메모리에서의 *segment table의 위치*
-    
-    
-    
+
+    <br>
+
 -   **Segment-table length register (STLR)**
-    
+
     -   프로그램이 사용하는 *segment의 수*
         -   segment number *s* is legal if s < STLR
-    
-    
-    
+
+    <br>
+
 -   **Protection**
 
     -   각 세그먼트 별로 protection bit가 있음
@@ -520,7 +494,7 @@
         -   Valid bit = 0 => illegal segment
         -   Read/Write/Execution 권한 bit
 
-    
+    <br>
 
 -   **Sharing**
 
@@ -528,7 +502,7 @@
     -   same segment number
     -   segment는 의미 단위이기 때문에 sharing과 protection에 있어 paging보다 훨씬 효과적이다.
 
-    
+    <br>
 
 -   **Allocation**
 
@@ -536,14 +510,18 @@
     -   external fragmentation 발생
     -   segment의 길이가 동일하지 않으므로 가변분할 방식에서와 동일한 문제점 발생
 
-
+<br>
 
 ### Segmentation with Paging
 
 -   pure segmentation과의 차이점
     -   *segment-table entry* 가 segment의 *base address* 를 가지고 있는 것이 아니라 segment를 구성하는 *page table* 의 *base address* 를 가지고 있음
 
+<br><br>
 
+## Reference
+
+[운영체제: 반효경 교수님](http://www.kocw.net/home/cview.do?cid=3646706b4347ef09)
 
 
 
