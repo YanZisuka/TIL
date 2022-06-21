@@ -9,9 +9,12 @@
         -   A word processor may have a thread for displaying graphics. another thread for responding to keystrokes from the user. and a third thread for performing grammar checking in the background
         -   **A web server may create a separate thread that can handle each individual request from clients and resume listening for additional requests**
             -   If the web server run as a single-threaded process. it would be able to service only one client at a time and a client may have to wait for a long time
+
+<br>
+
 -   Threads는 메모리와 자원을 공유하지만, fork된 process들은 그렇지 않다. (heavy하다.)
 
-
+<br><br>
 
 ### Process Characteristics
 
@@ -21,11 +24,15 @@
     -   OS performs protection to prevent unwanted interferences among processes with respect to resources
 -   A process includes a virtual address space (process image)
 
+<br>
+
 #### Scheduling unit
 
 -   Process is the entity that is scheduled and dispatched by OS
 -   Resource는 process 별로 할당하지만, scheduling은 threads 별로 할당한다.
 -   즉, Threads는 memory와 resource를 모두 공유하지만 scheduling만 각자 할당되므로 process에 비해 가볍다.
+
+<br>
 
 #### Two characteristics are independent
 
@@ -33,7 +40,7 @@
     -   **In OS that supports threads, the scheduling unit is usually referred to as a *thread* or *lightweight process***
     -   **The unit of resource ownership is referred to as a *process* or *task***
 
-
+<br><br>
 
 ### Multithreading
 
@@ -45,11 +52,15 @@
     -   **Thread context**
     -   **Thread execution stack**
 
+<br>
+
 #### Single-threaded approach
 
 -   Traditional approach of a single thread of execution per process
 -   No concept of thread
     -   Examples: MS-DOS, old UNIX
+
+<br>
 
 #### Multi-threaded approach
 
@@ -59,6 +70,8 @@
     -   Example: Windows, Solaris, modern UNIX
 
 ![image-20220326180113107](operating_system_04.assets/image-20220326180113107.png)
+
+<br>
 
 #### Advantages of threads compared to process
 
@@ -71,7 +84,7 @@
     -   Communication between processes require the kernel intervention to provide protection and communication (signal)
     -   **Threads can communicate without kernel through shared memory**
 
-
+<br><br>
 
 ### Multithreaded Process Model
 
@@ -80,6 +93,8 @@
 -   Virtual address space (process image on memory)
 -   Protected access to processors, files, and I/O devices
 
+<br>
+
 #### Each thread within a process has
 
 -   Thread control block
@@ -87,12 +102,16 @@
     -   Thread state, priority, and other thread-related state information
 -   Execution stack (user stack, kernel stack)
 
+<br>
+
 #### Threads가 자원을 공유한다는 것의 의미
 
 -   When one thread alters the data item in memory, other threads see the results when they access the item.
 -   If one thread opens a file with read privileges, other threads can also read from that file.
 
 ![image-20220326180918360](operating_system_04.assets/image-20220326180918360.png)
+
+<br><br>
 
 ### Multithreaded Applications
 
@@ -104,6 +123,8 @@
 -   Faster to use threads to share files and coordinate their actions through shared memory
     -   Processes/threads in a file server must share file data and coordinate actions
 
+<br>
+
 #### Other examples in a single-user system
 
 -   Foreground and background jobs
@@ -113,12 +134,14 @@
 -   Batch processing
     -   One thread may process a batch job while another is reading the next batch (one thread가 I/O때문에 blocked 되더라도, another thread가 실행될 수 있다.)
 
-
+<br><br>
 
 ### Thread State
 
 -   Ready, Run, Blocked
 -   **Suspended: does not make sense since it is process-level state**
+
+<br>
 
 #### Thread operations that affects the state
 
@@ -126,15 +149,17 @@
     -   When a new process is spawned, a thread for that process is also spawned
     -   A thread may spawn another thread within the same process
         -   The new thread is provided with its own register context and stack space and placed on the ready queue
+
 -   Block
     -   When a thread needs to wait for an event, it will block (save its PC and registers)
     -   The processor may switch to another ready thread in the same or different process
+
 -   Unblock
     -   When the event occurs, the thread moves to the ready queue
 -   Finish
     -   When a thread completes, the register context and stacks are deallocated
 
-
+<br><br>
 
 ### RPC Using Single Thread
 
@@ -159,6 +184,8 @@
 
     ![image-20220326184643999](operating_system_04.assets/image-20220326184643999.png)
 
+<br><br>
+
 ### User-Level Threads (ULTs)
 
 #### All threads management is done by the application
@@ -166,13 +193,19 @@
 -   The threads library contains code for creating and destroying threads, scheduling thread execution, saving and restoring thread contexts, and passing messages between threads
 -   Library에서 지원하는 threads
 
+<br>
+
 #### The kernel is not aware of the existence of threads
 
 ![image-20220327104106271](operating_system_04.assets/image-20220327104106271.png)
 
+<br>
+
 #### ULT States and Process States
 
 ![image-20220327104146858](operating_system_04.assets/image-20220327104146858.png)
+
+<br>
 
 #### Advantages
 
@@ -181,6 +214,8 @@
     -   One application may benefit most from a simple round robin scheduling while another might benefit from a priority-based scheduling
 -   ULTs can run on any OS, No changes are required to the underlying kernel
 
+<br>
+
 #### Disadvantages
 
 -   In a typical OS, many system calls are blocked
@@ -188,7 +223,7 @@
 -   A multithreaded application cannot take advantage of multiprocessing
     -   A kernel assigns one process to only one processor. Therefore, only a single thread can execute at a time
 
-
+<br><br>
 
 ### Kernel-Level Threads (KLTs)
 
@@ -200,11 +235,15 @@
 
 ![image-20220327105605905](operating_system_04.assets/image-20220327105605905.png)
 
+<br>
+
 #### Advantages
 
 -   The kernel can simultaneously schedule multiple threads from the same process on multiple processors
 -   If one thread is blocked, the kernel can schedule another thread of the same process
 -   Kernel routines can be multithreaded
+
+<br>
 
 #### Disadvantages
 
@@ -215,6 +254,8 @@
     ![image-20220327110407920](operating_system_04.assets/image-20220327110407920.png)
 
 
+
+<br><br>
 
 ### Combined Approach
 
@@ -232,15 +273,21 @@
 
 
 
+<br><br>
+
 ### Performance Impact of Multicores
 
 #### Amdahl's law
 
 ![image-20220327111139013](operating_system_04.assets/image-20220327111139013.png)
 
+<br>
+
 #### Database Workloads on Multicores
 
 ![image-20220327111257919](operating_system_04.assets/image-20220327111257919.png)
+
+<br>
 
 #### Applications for Multicores
 
@@ -263,7 +310,7 @@
 
 -   Can achieve speedup by running multiple instances of the same application in parallel
 
-
+<br><br>
 
 ### Solaris
 
@@ -280,14 +327,26 @@
 -   Kernel thread
     -   There are kernel threads that are not associated with LWPs
 
+<br>
+
 #### Processes and Threads in Solaris
 
 ![image-20220327114152577](operating_system_04.assets/image-20220327114152577.png)
+
+<br>
 
 #### Traditional UNIX vs. Solaris
 
 ![image-20220327114402613](operating_system_04.assets/image-20220327114402613.png)
 
+<br>
+
 #### Solaris Thread States
 
 ![image-20220327114754687](operating_system_04.assets/image-20220327114754687.png)
+
+<br><br>
+
+## Reference
+
+[운영체제: 최린 교수님](https://youtu.be/tkVF4E3H_M4)
