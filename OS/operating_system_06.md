@@ -6,6 +6,8 @@
 -   consistency 유지를 위해서는 cooperating process 간의 orderly execution을 정해주는 메커니즘이 필요
 -   race condition을 막기 위해서 concurrent process는 synchronize 되어야 한다.
 
+<br><br>
+
 ### Process Interaction
 
 #### In a single-processor system,
@@ -19,10 +21,12 @@
     -   Starvation (자원을 요청한 프로세스가 소외되어 계속 대기하는 상태)
     -   Race condition
 
+<br>
+
 
 #### The same problems exist in a multiprocessor system
 
-
+<br><br>
 
 ### Mutual exclusion
 
@@ -32,6 +36,8 @@
 -   During the course of execution, only one process should be allowed to access the resource at a time.
     -   The portion of program that accesses the resource is called a ***critical section*** of the program.
     -   Only one process at a time allowed in its critical section
+
+<br><br>
 
 ### Deadlock
 
@@ -43,6 +49,8 @@
     -   Neither will release the resource until it acquires the other resource
     -   Two processes are deadlocked!
 
+<br><br>
+
 ### Starvation (Indefinite postponement)
 
 -   Consider 3 processes P1, P2, and P3.
@@ -52,7 +60,7 @@
     -   OS grants access to P3, then P1, then P3, ...
     -   P2 may be indefinitely postponed to access the resource
 
-
+<br><br>
 
 ### Cooperating Processes
 
@@ -60,9 +68,13 @@
 
 -   프로세스는 각자의 주소 공간을 가지고 수행되므로 원칙적으로 하나의 프로세스는 다른 프로세스의 수행에 영향을 미치지 못함
 
+<br>
+
 #### 협력 프로세스 (Cooperating process)
 
 -   프로세스 협력 메커니즘을 통해 하나의 프로세스가 다른 프로세스의 수행에 영향을 미칠 수 있음
+
+<br>
 
 #### 프로세스간 협력 메커니즘 (IPC: Interprocess Communication)
 
@@ -76,19 +88,24 @@
 
         -   Indirect communication: mailbox (or port)를 통해 메시지를 간접 전달
 
+<br>
+
 -   주소 공간을 공유하는 방법
 
     -   Shared memory: 서로 다른 프로세스 간에도 일부 주소 공간을 공유하게 하는 shared memory 메커니즘이 존재
 
         ![image-20220330011359073](operating_system_06.assets/image-20220330011359073.png)
 
--   **Thread**
+<br>
 
+-   **Thread**
     -   Thread는 사실상 하나의 프로세스이므로 프로세스간 협력으로 보기는 어렵지만 동일한 process를 구성하는 thread들 간에는 주소 공간을 공유하므로 협력 가능
+
+<br>
 
 #### Sharing of global data may lead to *race condition*
 
-
+<br><br>
 
 ### Race condition
 
@@ -108,7 +125,7 @@
     -   커널 내부에 있는 각 공유 데이터에 접근할 때마다 그 데이터에 대한 lock/unlock을 수행
 -   **The problem can be avoided by declaring the entire sequence in each process to be a critical section**
 
-
+<br><br>
 
 ### The Critical-Section Problem
 
@@ -125,6 +142,8 @@ do {
 } while (1);
 ```
 
+<br>
+
 #### 프로그램적 해결법의 충족 조건
 
 -   **Mutual Exclusion(상호 배제)**
@@ -136,6 +155,8 @@ do {
 -   가정
     -   모든 프로세스의 수행 속도는 0보다 크다.
     -   프로세스들 간의 상대적인 수행 속도는 가정하지 않는다.
+
+<br>
 
 #### Algorithm 1
 
@@ -156,6 +177,8 @@ do {
     ```
 
 -   Progress 조건을 만족하지 못한 algorithm
+
+<br>
 
 #### Algorithm 2
 
@@ -179,6 +202,8 @@ do {
 
 -   둘다 2행까지 수행 후 끊임없이 양보하는 상황 발생 가능
 
+<br>
+
 #### Algorithm 3 (Peterson's Algorithm)
 
 -   Combined synchronization variables of algorithms 1 and 2
@@ -200,7 +225,7 @@ do {
 
 -   **Busy Waiting(=spin lock)!** (계속 CPU와 memory를 점유하면서 wait)
 
-
+<br><br>
 
 ### Synchronization Hardware
 
@@ -221,7 +246,7 @@ do {
     	}
     ```
 
-
+<br><br>
 
 ### Atomic Operation
 
@@ -232,6 +257,8 @@ do {
     -   Success: successfully change the system state
     -   Failure: no effect on the system state
 
+<br>
+
 #### Atomic operation
 
 -   A function or action implemented as a single instruction or as a sequence of instructions that appears to be indivisible
@@ -241,7 +268,7 @@ do {
 -   SW-level solutions
     -   Running a group of instructions in a *critical section*
 
-
+<br><br>
 
 ### Semaphore
 
@@ -271,6 +298,8 @@ do {
     
     -   The value of the semaphore **S** is usually the number of units of the resource that are currently available.
 
+<br>
+
 #### Critical Section of n Processes
 
 ```C
@@ -288,6 +317,8 @@ do {
 
 -   Busy-wait는 효율적이지 못함(=spin lock)
     -   Block & Wakeup 방식의 구현(=sleep lock)
+
+<br>
 
 #### Block/Wakeup Implementation
 
@@ -307,10 +338,14 @@ do {
     -   커널은 block을 호출한 프로세스를 suspend시킴
     -   이 프로세스의 PCB를 semaphore에 대한 wait queue에 넣음
 
+<br>
+
 -   **wakeup(P)**
 
     -   block된 프로세스 P를 wakeup시킴
     -   이 프로세스의 PCB를 ready queue로 옮김
+
+<br>
 
 -   Semaphore 연산이 이제 다음과 같이 정의됨
 
@@ -330,12 +365,16 @@ do {
             }
     ```
 
+<br>
+
 #### Busy-wait vs. Block/Wakeup
 
 -   Block/Wakeup overhead vs. Critical section 길이
     -   Critical section의 길이가 긴 경우 Block/Wakeup이 적당
     -   Critical section의 길이가 매우 짧은 경우 Block/Wakeup 오버헤드가 busy-wait 오버헤드보다 더 커질 수 있음
     -   일반적으로는 Block/Wakeup 방식이 더 뛰어남
+
+<br>
 
 #### Type of Semaphore
 
@@ -352,7 +391,7 @@ do {
     -   Can have an arbitrary **resource count**
     -   도메인이 0 이상인 임의의 정수
 
-
+<br><br>
 
 ### Deadlock & Starvation
 
@@ -372,7 +411,7 @@ do {
     -   **Indefinite blocking**
     -   프로세스가 suspend된 이유에 해당하는 semaphore queue에서 빠져나갈 수 없는 현상
 
-
+<br><br>
 
 ### Semaphore의 문제점
 
@@ -393,7 +432,7 @@ critical section
 P(mutex)
 ```
 
-
+<br><br>
 
 ### Monitor
 
@@ -426,7 +465,7 @@ monitor monitor-name {
         -   x.signal()은 정확하게 하나의 **suspend된** 프로세스를 resume한다.
         -   suspend된 프로세스가 없으면 아무 일도 일어나지 않는다.
 
-
+<br><br>
 
 ## Chapter 7. Synchronization Examples
 
@@ -437,6 +476,8 @@ monitor monitor-name {
 -   Producer나 consumer가 요구하는 자원이 하나도 없을 경우 문제가 됨
     -   Resource count -> Need integer semaphore
 
+<br>
+
 #### Producer
 
 1.   Empty 버퍼가 있나요? (없으면 기다림)
@@ -445,6 +486,8 @@ monitor monitor-name {
 4.   Lock을 푼다
 5.   Full buffer 하나 증가
 
+<br>
+
 #### Consumer
 
 1.   Full 버퍼가 있나요? (없으면 기다림)
@@ -452,6 +495,8 @@ monitor monitor-name {
 3.   Full buffer에서 데이터 꺼내고 buffer 조작
 4.   Lock을 푼다
 5.   Empty buffer 하나 증가
+
+<br>
 
 #### Implementation with Semaphore
 
@@ -488,6 +533,8 @@ do {
 } while(1);
 ```
 
+<br>
+
 #### Implementation with Monitor
 
 ```pseudocode
@@ -511,12 +558,14 @@ monitor bounded_buffer {
 }
 ```
 
-
+<br><br>
 
 ### Readers-Writers Problem
 
 -   한 process가 DB에 write 중일 때 다른 process가 접근하면 안 됨
 -   Read는 동시에 가능
+
+<br>
 
 #### Solution
 
@@ -524,6 +573,8 @@ monitor bounded_buffer {
 -   Writer는 대기중인 Reader가 하나도 없을 때 DB 접근이 허용된다.
 -   일단 Writer가 DB에 접근 중이면 Reader들은 접근이 금지된다.
 -   Writer가 DB에서 빠져나가야만 Reader의 접근이 허용된다.
+
+<br>
 
 #### Implementation
 
@@ -558,7 +609,7 @@ if (readCount == 0) V(db); /* Enable writer */
 V(mutex);
 ```
 
-
+<br><br>
 
 ### Dining-Philosophers Problem
 
@@ -592,6 +643,8 @@ do {
     -   젓가락을 두 개 모두 집을 수 있을 때만 젓가락을 집게 한다.
     -   비대칭
         -   짝수(홀수) 철학자는 왼쪽(오른쪽) 젓가락부터 집도록
+
+<br>
 
 #### Implementation with Semaphore
 
@@ -631,6 +684,8 @@ void test(int i) {
     }
 }
 ```
+
+<br>
 
 #### Implementation with Monitor
 
@@ -676,3 +731,8 @@ Each philosopher:
 } while(1);
 ```
 
+<br><br>
+
+## Reference
+
+[운영체제: 반효경 교수님](http://www.kocw.net/home/cview.do?cid=3646706b4347ef09)
