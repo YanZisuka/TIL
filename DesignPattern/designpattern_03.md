@@ -38,8 +38,9 @@
 
 - 싱글톤 패턴의 구현은 보통 두 단계로 이루어진다.
   
-  - **default constructor를 private으로 설정한다.**
-  - 생성자로서 역할하는 static creation method를 만들고, 인스턴스 호출시 캐싱된 객체를 리턴하도록 한다.
+  1. **default constructor를 private으로 설정한다.**
+
+  2. 생성자로서 역할하는 static creation method를 만들고, 인스턴스 호출시 캐싱된 객체를 리턴하도록 한다.
 
 <br />
 
