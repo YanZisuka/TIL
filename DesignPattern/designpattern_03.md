@@ -2,28 +2,44 @@
 
 ## Singleton Pattern
 
-> Singleton is a creational design pattern, which ensures that only one objects of its kind exists and provides a single point of access to it for any other code.
+![Singleton pattern](https://refactoring.guru/images/patterns/content/singleton/singleton.png)
+
+> Singleton is a creational design pattern,
+> 
+> which ensures that only one objects of its kind exists
+> 
+> and provides a single point of access to it for any other code.
 
 <br />
 
-- The singleton design pattern solves problems by allowing it to:
+싱글톤 패턴은 다음 **두 가지 문제를 동시에 해결한다.**
+
+1. 클래스가 단 하나의 인스턴스를 갖는 것을 보장
+   
+   - 왜 클래스가 갖는 인스턴스의 수를 컨트롤하고 싶어할까?
+     
+     - 가장 흔한 이유는, **공유된 자원(데이터베이스, 파일)에 대한 접근을 컨트롤하기** 위함.
+   
+   - 싱글톤은 새로운 객체를 생성하는 대신, 이전에 생성해둔 객체를 획득하는 방법으로 동작한다.
+     
+     - 일반적인 생성자를 이용하는 경우, 이러한 동작을 구현할 수 없다는 것을 기억하자.
+     
+     - 이유는, 일반적인 생성자를 호출하면 **반드시** 새로운 객체를 리턴하도록 디자인되었기 때문.
+
+2. 인스턴스에 대해 **global access point를** 제공한다.
+   
+   - 전역 변수를 사용하면 편리하겠지만 다른 코드가 해당 변수의 내용을 덮어쓸 수 있고, 이렇게 되면 앱이 충돌할 가능성이 생기기 마련이다.
+   
+   - Singleton 패턴은 프로그램의 어느 곳에서나 일부 개체에 접근할 수 있지만 다른 코드가 해당 인스턴스를 덮어쓰지 못하게 보호한다.
+   
+   - 또한, 1번 문제를 해결하는 코드가 프로그램 전체에 흩어지지 않고 하나의 클래스 안에 응집되어 있도록 설계할 수 있다.
+
+<br />
+
+- 싱글톤 패턴의 구현은 보통 두 단계로 이루어진다.
   
-  - Ensure that a class only has one instance
-  - Easily access the sole instance of a class
-  - Control its instantiation
-  - Restrict the number of instances
-  - Access a global variable
-
-<br />
-
-- The singleton design pattern describes how to solve such problems:
-  
-  - **Hide the constructors of the class**
-  - Define a public static operation `getInstance()` that returns the sole instance of the class.
-
-<br />
-
-- e.g., Dark mode는 다른 페이지로 이동하더라도 다크모드가 유지되어야 함
+  - **default constructor를 private으로 설정한다.**
+  - 생성자로서 역할하는 static creation method를 만들고, 인스턴스 호출시 캐싱된 객체를 리턴하도록 한다.
 
 <br />
 
@@ -62,15 +78,22 @@ if __name__ == '__main__':
         print('두 변수가 담고있는 인스턴스가 달라요.')
 ```
 
-- multithread의 경우 오류가 발생할 여지가 있다. 
-  - multiple thread는 creation method를 동시에 호출할 가능성이 있으므로 객체가 하나뿐이라는 것을 보장하지 못하는 것.
-- 채팅의 경우 web socket을 이용하는데, 이러한 경우도 오류 발생 가능
-- 모바일 프레임워크의 경우 Main class가 거의 singleton pattern
-- 장점
-  - view 간에 값이 변할 수 있는 데이터를 사용할 때, (계산기의 경우 하나하나의 버튼이 subview, subview에서 superview의 데이터를 확인할 방법이 없다.) -> Singleton을 쓰게 되면 delegation pattern을 써서 이를 우회하거나 할 필요가 없다. (생산성 향상)
+<br />
+
 - 단점
-  - test가 어렵다.
-    - e.g., 다크모드 토글의 경우 `테스트 코드 A`에서 라이트 -> 다크, `B`는 다크 -> 라이트인 경우 동시에 시행되어 문제 발생 가능
+  - 두 가지 문제를 동시에 해결한다는 것은 *단일 책임 원칙을* 위반했다는 이야기.
+  
+  - multithreaded 환경(e.g., 채팅)에서는 특별한 관리가 필요하다.
+    
+    - multiple thread는 creation method를 동시에 호출할 가능성이 있으므로 객체가 하나뿐이라는 것을 보장하지 못하는 것.
+  
+  - unit test가 어렵다.
+    
+    - 많은 test framework가 mock objects의 생성 시 상속에 의존하기 때문.
+    
+    - the singleton을 mock 하기 위한 creative way를 생각해야 한다.
+    
+    - 결국, 테스트를 작성하지 않거나 싱글톤을 쓰지 않아야 하는 상황이 찾아온다.
 
 <br />
 
